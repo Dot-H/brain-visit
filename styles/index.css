@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --light-background: linear-gradient(180deg, #fcc1a8 0%, #ffeae0 43.23%);
+  --light-section-tech-bg: rgba(143, 95, 74);
+  --light-section-excursions-bg: rgba(212, 56, 75);
+  --light-section-thoughts-bg: rgba(239, 86, 76);
+  --light-text-secondary: #506770;
+  --dark-background: #000;
+  --dark-section-tech-bg: rgba(143, 95, 74);
+  --dark-section-excursions-bg: rgba(212, 56, 75);
+  --dark-section-thoughts-bg: rgba(239, 86, 76);
+  --dark-text-secondary: #506770;
+}
+
+html {
+  --background: var(--light-background);
+  --text-secondary: var(--light-text-secondary);
+  --section-tech-bg: var(--light-section-tech-bg);
+  --section-excursions-bg: var(--light-section-excursions-bg);
+  --section-thoughts-bg: var(--light-section-thoughts-bg);
+  background: var(--background);
+}
+
+html.dark {
+  --background: var(--dark-background);
+  --text-secondary: var(--dark-text-secondary);
+  --section-tech-bg: var(--dark-section-tech-bg);
+  --section-excursions-bg: var(--dark-section-excursions-bg);
+  --section-thoughts-bg: var(--dark-section-thoughts-bg);
+}

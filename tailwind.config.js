@@ -9,6 +9,16 @@ module.exports = {
         'accent-7': '#333',
         success: '#0070f3',
         cyan: '#79FFE1',
+				secondary: 'var(--text-secondary)',
+				'section-tech-bg': 'var(--section-tech-bg)',
+				'section-excursions-bg': 'var(--section-excursions-bg)',
+				'section-thoughts-bg': 'var(--section-thoughts-bg)',
+				custom: {
+					background: 'var(--background)'
+				}
+      },
+			backgroundImage: {
+        'mountains': "url('/assets/backgrounds/mountains.svg')",
       },
       spacing: {
         28: '7rem',
