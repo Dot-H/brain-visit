@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className="overflow-hidden position-relative">
+      <body className="relative bg">
         <Main />
         <NextScript />
       </body>

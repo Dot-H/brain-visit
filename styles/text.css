@@ -1,0 +1,20 @@
+@tailwind base;
+
+@layer base {
+  h1,
+  header {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+  header {
+    @apply text-center;
+  }
+  p {
+    @apply text-lg;
+  }
+}

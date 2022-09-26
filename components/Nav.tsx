@@ -1,8 +1,11 @@
-import Image from "next/image";
+// Components
+import DarkModeToggle from "components/DarkModeToggle";
 import Link from "next/link";
-import Logo from "../components/Logo";
-import GithubLogo from "../public/assets/icons/github-logo.svg";
-import LinkedinLogo from "../public/assets/icons/linkedin-logo.svg";
+import Logo from "components/Logo";
+
+// Icons
+import GithubLogo from "components/svgs/GithubLogo";
+import LinkedinLogo from "components/svgs/LinkedinLogo";
 
 const Nav = () => (
   <nav className="text-primary flex items-center justify-between py-2.5">
@@ -11,21 +14,22 @@ const Nav = () => (
         <Logo />
       </a>
     </Link>
-    <div className="flex space-x-2">
+    <div className="flex items-center space-x-2">
       <a
         href="https://www.linkedin.com/in/alexandre-bernard-ek/"
         target="_blank"
         rel="noreferrer"
       >
-        <Image alt="linkedin logo" width={30} height={30} src={LinkedinLogo} />
+        <GithubLogo />
       </a>
       <a
         href="https://github.com/Dot-H/website"
         target="_blank"
         rel="noreferrer"
       >
-        <Image alt="github logo" width={30} height={30} src={GithubLogo} />
+        <LinkedinLogo />
       </a>
+      <DarkModeToggle />
     </div>
   </nav>
 );

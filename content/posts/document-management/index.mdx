@@ -1,0 +1,151 @@
+---
+releaseDate: "2021-02-15"
+title: "Gestion de documents"
+tags: ["engineering"]
+description: "Une Gestion Électronique de Documents parfaitement intégrée. Récupérez et classez efficacement vos documents et ceux issus de vos contacts"
+---
+
+La gestion de documents est bien souvent limitée à leur stockage. Quelle que soit la solution
+utilisée, il est toujours aussi compliqué de :
+
+- Classer et retrouver ses documents,
+- Être certain d'avoir la dernière version,
+- Les partager avec des personnes qui n'utilisent pas la même solution.
+
+Par ailleurs, la problématique de l'accès aux données essentielles contenues dans un document reste
+entière. Pour exemple, la récupération et l’exploitation des données contenues dans un fichier pdf
+sont loin d’être aisées et à la portée de tous.
+
+# Retrouvez simplement vos documents
+
+Avec eKee vous pouvez enregistrer vos documents avec les informations essentielles qui les décrivent
+et qui constitueront autant de critères pour les retrouver facilement :
+
+- Nom,
+- Description,
+- Date réelle du document (date de facture, date du contrat, …),
+- Catégorie (Vente, Achat, Juridique, Banque, Administratif, …),
+- Type (Facture, Contrat, Pièces d’identité, Attestation, Statuts, RIB, PV …),
+- Émetteur du document,
+- Statut (Projet, Diffusion, Nouveau, Ancien …),
+- ...
+
+De plus, grâce à la [gestion de contacts eKee](/blog/gestion-de-contacts), vous
+pourrez associer à chaque document un ou plusieurs contacts, ou encore un
+Groupe de contacts (Salariés, Clients, Fournisseurs, Famille, …). Tous vos
+documents sont ainsi :
+
+- Classés de façon pertinente,
+- Facile à retrouver,
+- Facile à identifier avec les documents du même type,
+- Associés simplement aux contacts concernés.
+
+Vous pourrez également, en un clic, retrouver tous les documents associés à un contact ou à un
+Groupe de contacts.
+
+![Passeport avec ses données associées](./documents-list-display.png)
+
+<center style="margin-top: -12px">
+  <i>
+    La liste des documents eKee permet de rapidement filtrer les documents qui
+    vous intéressent
+  </i>
+</center>
+<br />
+
+# Partager ou récupérer des documents simplement
+
+Oubliez la contrainte de la gestion des pièces jointes à un mail, tant pour
+l'émetteur que pour le destinataire.
+
+Avec les [consentements eKee](/blog/gestion-de-consentements), donner accès à
+un ou plusieurs documents à destination d’un contact ou d’un Groupe de contacts
+n’a jamais été aussi simple.
+
+Vous maîtrisez en permanence qui peut accéder à quels documents, et vous êtes
+ainsi certain que vos interlocuteurs pourront avoir accès à la dernière version
+de vos documents.
+
+Pour exemple :
+
+1. La société **A** créé un consentement donnant accès aux documents
+   qui possèdent les critères:
+   - Catégorie = “Vente”,
+   - Statut = “Diffusion“,
+   - Associés au Groupe de contacts “Clients”.
+2. Tous les documents destinés à ses clients leurs sont donc automatiquement
+   diffusés (Condition générales de vente, RIB, Attestation d’assurance, ….),
+3. Si **A** rajoute un nouveau document répondant à ces critères, tous ses
+   clients y auront automatiquement accès et recevront une notification. De
+   même, ajouter un contact au groupe “Client” permettra à ce dernier d'accéder
+   à ces mêmes documents.
+
+Plus puissant encore, le même consentement pourra permettre de diffuser les
+documents qui auront été spécifiquement associés à un contact du groupe.
+
+- Les documents généraux associés au groupe “Clients” seront accessibles par tous les
+  contacts membres
+- Les documents spécifiquement associés à un contact appartenant à ce même groupe,
+  seront accessibles par ce seul contact.
+
+Autres cas d’usage, on peut partager très simplement :
+
+- Sa dernière pièce d’identité
+- Son dernier kBis
+- Ses derniers statuts
+- ...
+
+eKee donnera accès automatiquement au document dont la date est la plus récente.
+
+Les multiples critères (Catégorie, Type, Date, Statut, Contacts ou Groupe de
+contacts associés, Émetteur) disponibles dans la gestion documentaire
+apportent donc une puissance inégalée pour partager des documents simplement.
+
+<!-- ![Jean partage un passeport à un groupe puis met à jours son passeport](./documents-sharing.gif) -->
+
+# Un document avec ses données associées
+
+eKee permet d'associer des modèles de données à des documents (Pièces
+d’identités, RIB, Factures…). Ainsi, les documents qui bénéficient d’un modèle
+de données pourront être communiqués avec les données essentielles qui sont
+nécessaires à leur exploitation (Numéro de passeport, date d'émission, date de
+fin de validité, IBAN,numéro de facture, émetteur, montant HT, montant TTC, ...).
+
+![Passeport avec ses données associées](./document-model-information.png)
+
+<center style="margin-top: -12px">
+  <i>
+    Le modèle de document "Passeport" permet d'exploiter directement les données
+    associées
+  </i>
+</center>
+<br />
+
+# Gagnez du temps
+
+Avec l’accès donné par eKee aux bases RNCS, SIRENE et BODACC, vous pouvez en
+un clic enregistrer dans votre gestion documentaire les actes ou comptes
+sociaux publiés par vos clients, fournisseurs, prospects.
+
+Ces documents seront automatiquement qualifiés et vous n’aurez aucune ressaisie
+à effectuer.
+
+![Un PV d'AG qualifié grâce à l'intégration de RNCS](./document-details-rncs.png)
+
+<center style="margin-top: -12px">
+  <i>
+    Un PV d'AG téléchargé et préqualifié via
+    <a href="/blog/bases-rncs-sirene-bodacc">l'intégration de RNCS</a> dont la seule
+    opération manuelle a été d'associer des contacts et un groupe
+  </i>
+</center>
+
+<br />
+
+# Connectez vos outils existants
+
+Si vous disposez d'une GED, vous pourrez utiliser [l'API eKee](/blog/api) pour l'alimenter automatiquement.
+
+<br />
+
+**Un document c’est bien, avec les données c’est mieux !**
