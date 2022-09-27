@@ -312,26 +312,6 @@ video {
   counter-increment: list-counter;
   padding-left: 1.75em;
 }
-.prose ol > li:before {
-  content: counter(list-counter) ".";
-  position: absolute;
-  font-weight: 400;
-  color: #718096;
-}
-.prose ul > li {
-  position: relative;
-  padding-left: 1.75em;
-}
-.prose ul > li:before {
-  content: "";
-  position: absolute;
-  background-color: #cbd5e0;
-  border-radius: 50%;
-  width: 0.375em;
-  height: 0.375em;
-  top: 0.6875em;
-  left: 0.25em;
-}
 .prose hr {
   border-color: #e2e8f0;
   border-top-width: 1px;
@@ -490,9 +470,6 @@ video {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-.prose ol > li:before {
-  left: 0;
-}
 .prose > ul > li p {
   margin-top: 0.75em;
   margin-bottom: 0.75em;
@@ -592,20 +569,7 @@ video {
   margin-top: 0.6666667em;
   margin-bottom: 0.6666667em;
 }
-.prose-lg ul > li {
-  padding-left: 1.6666667em;
-}
-.prose-lg ul > li:before {
-  width: 0.3333333em;
-  height: 0.3333333em;
-  top: 0.72222em;
-  left: 0.2222222em;
-}
-.prose-lg > ul > li p {
-  margin-top: 0.8888889em;
-  margin-bottom: 0.8888889em;
-}
-.prose-lg > ul > li > :first-child {
+.prose-lg ul > li > :first-child {
   margin-top: 1.3333333em;
 }
 .prose-lg > ul > li > :last-child {
@@ -1331,26 +1295,6 @@ body {
     counter-increment: list-counter;
     padding-left: 1.75em;
   }
-  .sm\:prose ol > li:before {
-    content: counter(list-counter) ".";
-    position: absolute;
-    font-weight: 400;
-    color: #718096;
-  }
-  .sm\:prose ul > li {
-    position: relative;
-    padding-left: 1.75em;
-  }
-  .sm\:prose ul > li:before {
-    content: "";
-    position: absolute;
-    background-color: #cbd5e0;
-    border-radius: 50%;
-    width: 0.375em;
-    height: 0.375em;
-    top: 0.6875em;
-    left: 0.25em;
-  }
   .sm\:prose hr {
     border-color: #e2e8f0;
     border-top-width: 1px;
@@ -1507,9 +1451,6 @@ body {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-  .sm\:prose ol > li:before {
-    left: 0;
-  }
   .sm\:prose > ul > li p {
     margin-top: 0.75em;
     margin-bottom: 0.75em;
@@ -1585,26 +1526,6 @@ body {
     position: relative;
     counter-increment: list-counter;
     padding-left: 1.75em;
-  }
-  .md\:prose ol > li:before {
-    content: counter(list-counter) ".";
-    position: absolute;
-    font-weight: 400;
-    color: #718096;
-  }
-  .md\:prose ul > li {
-    position: relative;
-    padding-left: 1.75em;
-  }
-  .md\:prose ul > li:before {
-    content: "";
-    position: absolute;
-    background-color: #cbd5e0;
-    border-radius: 50%;
-    width: 0.375em;
-    height: 0.375em;
-    top: 0.6875em;
-    left: 0.25em;
   }
   .md\:prose hr {
     border-color: #e2e8f0;
@@ -1762,9 +1683,6 @@ body {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-  .md\:prose ol > li:before {
-    left: 0;
-  }
   .md\:prose > ul > li p {
     margin-top: 0.75em;
     margin-bottom: 0.75em;
@@ -1872,26 +1790,6 @@ body {
     position: relative;
     counter-increment: list-counter;
     padding-left: 1.75em;
-  }
-  .lg\:prose ol > li:before {
-    content: counter(list-counter) ".";
-    position: absolute;
-    font-weight: 400;
-    color: #718096;
-  }
-  .lg\:prose ul > li {
-    position: relative;
-    padding-left: 1.75em;
-  }
-  .lg\:prose ul > li:before {
-    content: "";
-    position: absolute;
-    background-color: #cbd5e0;
-    border-radius: 50%;
-    width: 0.375em;
-    height: 0.375em;
-    top: 0.6875em;
-    left: 0.25em;
   }
   .lg\:prose hr {
     border-color: #e2e8f0;
@@ -2049,9 +1947,6 @@ body {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-  .lg\:prose ol > li:before {
-    left: 0;
-  }
   .lg\:prose > ul > li p {
     margin-top: 0.75em;
     margin-bottom: 0.75em;
@@ -2151,20 +2046,7 @@ body {
     margin-top: 0.6em;
     margin-bottom: 0.6em;
   }
-  .lg\:prose-xl ul > li {
-    padding-left: 1.8em;
-  }
-  .lg\:prose-xl ul > li:before {
-    width: 0.35em;
-    height: 0.35em;
-    top: 0.725em;
-    left: 0.25em;
-  }
-  .lg\:prose-xl > ul > li p {
-    margin-top: 0.8em;
-    margin-bottom: 0.8em;
-  }
-  .lg\:prose-xl > ul > li > :first-child {
+  .lg\:prose-xl ul > li > :first-child {
     margin-top: 1.2em;
   }
   .lg\:prose-xl > ul > li > :last-child {
@@ -2286,193 +2168,7 @@ body {
     counter-increment: list-counter;
     padding-left: 1.75em;
   }
-  .xl\:prose ol > li:before {
-    content: counter(list-counter) ".";
-    position: absolute;
-    font-weight: 400;
-    color: #718096;
-  }
-  .xl\:prose ul > li {
-    position: relative;
-    padding-left: 1.75em;
-  }
-  .xl\:prose ul > li:before {
-    content: "";
-    position: absolute;
-    background-color: #cbd5e0;
-    border-radius: 50%;
-    width: 0.375em;
-    height: 0.375em;
-    top: 0.6875em;
-    left: 0.25em;
-  }
-  .xl\:prose hr {
-    border-color: #e2e8f0;
-    border-top-width: 1px;
-    margin-top: 3em;
-    margin-bottom: 3em;
-  }
-  .xl\:prose blockquote {
-    font-weight: 500;
-    font-style: italic;
-    color: #1a202c;
-    border-left-width: 0.25rem;
-    border-left-color: #e2e8f0;
-    quotes: "\201C""\201D""\2018""\2019";
-    margin-top: 1.6em;
-    margin-bottom: 1.6em;
-    padding-left: 1em;
-  }
-  .xl\:prose blockquote p:first-of-type:before {
-    content: open-quote;
-  }
-  .xl\:prose blockquote p:last-of-type:after {
-    content: close-quote;
-  }
-  .xl\:prose h1 {
-    color: #1a202c;
-    font-weight: 800;
-    font-size: 2.25em;
-    margin-top: 0;
-    margin-bottom: 0.8888889em;
-    line-height: 1.1111111;
-  }
-  .xl\:prose h2 {
-    color: #1a202c;
-    font-weight: 700;
-    font-size: 1.5em;
-    margin-top: 2em;
-    margin-bottom: 1em;
-    line-height: 1.3333333;
-  }
-  .xl\:prose h3 {
-    font-size: 1.25em;
-    margin-top: 1.6em;
-    margin-bottom: 0.6em;
-    line-height: 1.6;
-  }
-  .xl\:prose h3,
-  .xl\:prose h4 {
-    color: #1a202c;
-    font-weight: 600;
-  }
-  .xl\:prose h4 {
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    line-height: 1.5;
-  }
-  .xl\:prose figure figcaption {
-    color: #718096;
-    font-size: 0.875em;
-    line-height: 1.4285714;
-    margin-top: 0.8571429em;
-  }
-  .xl\:prose code {
-    color: #1a202c;
-    font-weight: 600;
-    font-size: 0.875em;
-  }
-  .xl\:prose code:after,
-  .xl\:prose code:before {
-    content: "`";
-  }
-  .xl\:prose pre {
-    color: #e2e8f0;
-    background-color: #2d3748;
-    overflow-x: auto;
-    font-size: 0.875em;
-    line-height: 1.7142857;
-    margin-top: 1.7142857em;
-    margin-bottom: 1.7142857em;
-    border-radius: 0.375rem;
-    padding: 0.8571429em 1.1428571em;
-  }
-  .xl\:prose pre code {
-    background-color: transparent;
-    border-width: 0;
-    border-radius: 0;
-    padding: 0;
-    font-weight: 400;
-    color: inherit;
-    font-size: inherit;
-    font-family: inherit;
-    line-height: inherit;
-  }
-  .xl\:prose pre code:after,
-  .xl\:prose pre code:before {
-    content: "";
-  }
-  .xl\:prose table {
-    width: 100%;
-    table-layout: auto;
-    text-align: left;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    font-size: 0.875em;
-    line-height: 1.7142857;
-  }
-  .xl\:prose thead {
-    color: #1a202c;
-    font-weight: 600;
-    border-bottom-width: 1px;
-    border-bottom-color: #cbd5e0;
-  }
-  .xl\:prose thead th {
-    vertical-align: bottom;
-    padding-right: 0.5714286em;
-    padding-bottom: 0.5714286em;
-    padding-left: 0.5714286em;
-  }
-  .xl\:prose tbody tr {
-    border-bottom-width: 1px;
-    border-bottom-color: #e2e8f0;
-  }
-  .xl\:prose tbody tr:last-child {
-    border-bottom-width: 0;
-  }
-  .xl\:prose tbody td {
-    vertical-align: top;
-    padding: 0.5714286em;
-  }
-  .xl\:prose p {
-    margin-top: 1.25em;
-    margin-bottom: 1.25em;
-  }
-  .xl\:prose figure,
-  .xl\:prose img,
-  .xl\:prose video {
-    margin-top: 2em;
-    margin-bottom: 2em;
-  }
-  .xl\:prose figure > * {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  .xl\:prose h2 code {
-    font-size: 0.875em;
-  }
-  .xl\:prose h3 code {
-    font-size: 0.9em;
-  }
-  .xl\:prose ul {
-    margin-top: 1.25em;
-    margin-bottom: 1.25em;
-  }
-  .xl\:prose li {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
-  .xl\:prose ol > li:before {
-    left: 0;
-  }
-  .xl\:prose > ul > li p {
-    margin-top: 0.75em;
-    margin-bottom: 0.75em;
-  }
-  .xl\:prose > ul > li > :first-child {
-    margin-top: 1.25em;
-  }
-  .xl\:prose > ul > li > :last-child {
+  .xl\:prose ul > li > :last-child {
     margin-bottom: 1.25em;
   }
   .xl\:prose > ol > li > :first-child {
@@ -2545,16 +2241,6 @@ body {
 }
 .prose blockquote {
   border-color: var(--primary-color);
-}
-.prose ul > li:before {
-  --bg-opacity: 1;
-  background-color: #4a5568;
-  background-color: rgba(74, 85, 104, var(--bg-opacity));
-}
-.prose ol > li:before {
-  --text-opacity: 1;
-  color: #4a5568;
-  color: rgba(74, 85, 104, var(--text-opacity));
 }
 .prose figcaption {
   font-size: 0.875rem !important;

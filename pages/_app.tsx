@@ -1,7 +1,7 @@
 // Styles
 import "styles/index.css";
 import "styles/text.css";
-import "styles/blogPost.css";
+import "styles/prose.css";
 
 // Components
 import { ThemeProvider } from "next-themes";

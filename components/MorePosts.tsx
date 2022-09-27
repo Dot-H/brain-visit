@@ -12,7 +12,7 @@ export type MorePostsProps = React.HTMLAttributes<HTMLElement> & {
 const MorePosts = ({ posts, categoryTag, ...rest }: MorePostsProps) => {
   return (
     <section {...rest}>
-      <h4 className="text-center mb-8 text-4xl text-gray-700 dark:text-gray-600 font-bold tracking-tighter leading-tight">
+      <h4 className="text-center mb-8 text-4xl tracking-tighter leading-tight">
         Other posts might interest you
       </h4>
       <div className="grid content-ceter gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center">

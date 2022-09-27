@@ -58,6 +58,10 @@ html.dark {
 }
 
 .bg {
+  /*
+	using a background-color behind the background-image permits to mimic
+	a transition on the gradient when the background changes.
+	*/
   background-color: #ffeae0;
   background-image: linear-gradient(180deg, #fcc1a8 0%, rgba(255, 255, 255, 0));
   transition: all 700ms linear;
@@ -68,6 +72,6 @@ html.dark {
   background-image: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    #ffffff75
+    #4a484875
   );
 }
