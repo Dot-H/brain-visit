@@ -16,14 +16,14 @@ const Nav = () => (
     </Link>
     <div className="flex items-center space-x-2">
       <a
-        href="https://www.linkedin.com/in/alexandre-bernard-ek/"
+        href="https://github.com/Dot-H/website"
         target="_blank"
         rel="noreferrer"
       >
         <GithubLogo />
       </a>
       <a
-        href="https://github.com/Dot-H/website"
+        href="https://www.linkedin.com/in/alexandre-bernard-ek/"
         target="_blank"
         rel="noreferrer"
       >

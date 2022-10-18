@@ -76,6 +76,7 @@ module.exports = {
                 },
                 a: {
                   textDecoration: 'none',
+									cursor: "pointer"
                 },
                 'a:hover,a:focus': {
                   textDecoration: 'underline',

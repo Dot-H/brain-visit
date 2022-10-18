@@ -1,5 +1,7 @@
+// Components
 import Link from "next/link";
 
+// Utils
 import cn from "classnames";
 
 export type ArticleSectionProps = React.HTMLAttributes<HTMLElement> & {
@@ -20,13 +22,20 @@ const ArticleSection = ({
     <Link href={href}>
       <article
         className={cn(
-          "w-[310px] h-[450px] cursor-pointer transition-colors duration-300 rounded-3xl border-solid border radius-30 border-white z-10 drop-shadow-2xl",
+          "h-[350px] z-20 alpha-on-hover flex w-full justify-between rounded-2xl cursor-pointer transition-colors duration-300 bg-section-engineering-bg",
           className
         )}
         {...rest}
       >
-        <header className="p-6">{title}</header>
-        <p className="text-justify p-8">{content}</p>
+        <div className="p-8 pt-14 flex flex-col prose prose-light dark:prose-dark">
+          <h1 className="text-xl">{title}</h1>
+          <p className="text-justify" style={{ marginTop: 0 }}>
+            {content}
+          </p>
+          <a className="mt-auto" style={{ display: "block" }}>
+            Read more &gt;
+          </a>
+        </div>
         {children}
       </article>
     </Link>

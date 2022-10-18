@@ -81,8 +81,8 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const p = post.getPostBySlug(params.slug);
   const content = await markdownToHtml(p.content || "");
-  const posts = post.getPostsMatching((p) =>
-    p.metadata.tags.includes(params.tag)
+  const posts = post.getPostsMatching(
+    (p) => p.metadata.tags.includes(params.tag) && p.slug !== params.slug
   );
 
   return {

@@ -2,6 +2,7 @@
 import "styles/index.css";
 import "styles/text.css";
 import "styles/prose.css";
+import "styles/cards.css";
 
 // Components
 import { ThemeProvider } from "next-themes";

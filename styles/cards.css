@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .overlapping-container {
+    --card-size: 220px;
+
+    @apply z-20;
+    height: 100%; /* Permits the viewport to correctly compute the global height of the page */
+    transition: 2s;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+
+    padding: 10%;
+    padding-top: 0;
+
+    /** Permits to center the cards using half their sizes **/
+    margin-top: -110px;
+  }
+
+  .card {
+    transition: 1s;
+    width: var(--card-size);
+    height: var(--card-size);
+  }
+
+  .card img {
+    border-radius: 20px;
+    background-color: #bbbbb885;
+  }
+
+  /* Engineer cards */
+  #card-one-engineer {
+    transform: translateX(-40%);
+  }
+  #card-two-engineer {
+    transform: translateY(-50%) translateX(50%);
+  }
+  #card-three-engineer {
+    transform: translateY(-90%) translateX(-25%);
+  }
+
+  /* Excursions cards */
+  #card-one-excursions {
+    transform: translateX(40%);
+  }
+  #card-two-excursions {
+    transform: translateY(-50%) translateX(-50%);
+  }
+  #card-three-excursions {
+    transform: translateY(-90%) translateX(25%);
+  }
+}

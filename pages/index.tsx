@@ -1,15 +1,19 @@
+// Components
+import Image from "next/image";
 import Head from "next/head";
-import Link from "next/link";
-
-import ClimbingManSVG from "components/svgs/ClimbingMan";
-import CodingManSVG from "components/svgs/CodingMan";
 import Container from "components/container";
 import Intro from "components/Intro";
 import Layout from "components/Layout";
-import MountainsBackgroud from "components/svgs/MountainsBackground";
 import Nav from "components/Nav";
 import Section from "components/ArticleSection";
-import ThinkingManSVG from "components/svgs/ThinkingMan";
+
+// Svgs
+import ClimbingManSVG from "components/svgs/ClimbingMan";
+import CodingManSVG from "components/svgs/CodingMan";
+import MountainsBackgroud from "components/svgs/MountainsBackground";
+import React from "react";
+
+// Images
 
 export default function Index() {
   return (
@@ -20,30 +24,23 @@ export default function Index() {
       <Container>
         <Nav />
         <Intro />
-        <section className="text-white flex flex-wrap md:-m-12 w-full justify-center">
+        <section className="text-white flex flex-col pt-16 pb-32 space-y-48 w-full justify-center">
           <Section
             href="/blog/engineering"
-            className="bg-section-engineering-bg alpha-on-hover m-12"
             title="Engineering articles"
-            content=""
+            content="Learn more about the engineering work I have been doing the past years. A place where I talk about performance tuning, software designing, web application development and devops stuff !"
           >
-            <CodingManSVG className="absolute -top-[70px] left-[20px]" />
+            <OverlappingCardsEngineer />
+            <CodingManSVG className="absolute -translate-y-[66%] translate-x-7" />
           </Section>
           <Section
+            className="flex-row-reverse"
             href="/blog/excursions"
             title="Excursions"
-            className="bg-section-excursions-bg alpha-on-hover m-12"
-            content=""
+            content="A group of posts about the excursions and the projects which really impacted me. Trailing, climbing, alpinism, hikes... Dive into some of my passions !"
           >
-            <ClimbingManSVG className="absolute -bottom-[17px] -left-[1px]" />
-          </Section>
-          <Section
-            href="/blog/thoughts"
-            title="Random thoughts"
-            className="bg-section-thoughts-bg alpha-on-hover m-12"
-            content=""
-          >
-            <ThinkingManSVG className="absolute right-[10px] -top-[70px]" />
+            <OverlappingCardsExcursions />
+            <ClimbingManSVG className="absolute -translate-y-6 -translate-x-7" />
           </Section>
         </section>
       </Container>
@@ -51,3 +48,61 @@ export default function Index() {
     </Layout>
   );
 }
+
+const OverlappingCardsEngineer = () => (
+  <div className="overlapping-container">
+    <div id="card-one-engineer" className="card">
+      <Image
+        alt={'"Zero configuration query language" post\'s cover'}
+        src={"/assets/blog/posts/zero-configuration-ql/cover.webp"}
+        width={300}
+        height={300}
+      />
+    </div>
+    <div id="card-two-engineer" className="card">
+      <Image
+        alt={"\"Setting up a startup's staging environment\" post's cover"}
+        src={"/assets/blog/posts/startup-staging-env/cover.webp"}
+        width={220}
+        height={220}
+      />
+    </div>
+    <div id="card-three-engineer" className="card">
+      <Image
+        alt={'"Convert SQL results to JSON representation" post\'s cover'}
+        src={"/assets/blog/posts/sql-to-json/cover.webp"}
+        width={220}
+        height={220}
+      />
+    </div>
+  </div>
+);
+
+const OverlappingCardsExcursions = () => (
+  <div className="overlapping-container">
+    <div id="card-one-excursions" className="card">
+      <Image
+        alt={"Dry tooling"}
+        src={"/assets/blog/posts/ucpa-alpinism/cover.webp"}
+        width={220}
+        height={220}
+      />
+    </div>
+    <div id="card-two-excursions" className="card">
+      <Image
+        alt={'"Circuling the Queyras by the summits" post\'s cover'}
+        src={"/assets/blog/posts/queyras/cover.jpg"}
+        width={220}
+        height={220}
+      />
+    </div>
+    <div id="card-three-excursions" className="card">
+      <Image
+        alt={'"Circuling the Queyras by the summits" post\'s cover'}
+        src={"/assets/blog/posts/aiguilles-rouges/cover.webp"}
+        width={220}
+        height={220}
+      />
+    </div>
+  </div>
+);

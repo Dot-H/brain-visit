@@ -19,8 +19,8 @@
   --dark-mountain-3: url(#dark-mountain-3);
   --dark-mountain-4: url(#dark-mountain-4);
   --dark-mountain-5: #020c27;
-  --dark-section-engineering-bg: 143 95 74;
-  --dark-section-excursions-bg: 212 56 75;
+  --dark-section-engineering-bg: 149 164 161;
+  --dark-section-excursions-bg: 12 52 109;
   --dark-section-thoughts-bg: 239 86 76;
   --dark-text-primary: #fffff;
   --dark-text-secondary: #506770;
@@ -41,6 +41,7 @@ html {
 }
 
 html.dark {
+  --alpha: 0.12;
   --mountain-1: var(--dark-mountain-1);
   --mountain-2: var(--dark-mountain-2);
   --mountain-3: var(--dark-mountain-3);
@@ -55,6 +56,9 @@ html.dark {
 
 .alpha-on-hover:hover {
   --alpha: 0.8;
+}
+.dark .alpha-on-hover:hover {
+  --alpha: 0.3;
 }
 
 .bg {
