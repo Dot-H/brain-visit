@@ -4,9 +4,12 @@
 
 @layer components {
   .overlapping-container {
-    --card-size: 220px;
-
     @apply z-20;
+    --card-size: 140px;
+
+    /** Permits to compensate the padding introduced by the translateY of the cards **/
+    margin-bottom: -140px;
+
     height: 100%; /* Permits the viewport to correctly compute the global height of the page */
     transition: 2s;
     display: flex;
@@ -15,9 +18,6 @@
 
     padding: 10%;
     padding-top: 0;
-
-    /** Permits to center the cards using half their sizes **/
-    margin-top: -110px;
   }
 
   .card {
@@ -29,6 +29,17 @@
   .card img {
     border-radius: 20px;
     background-color: #bbbbb885;
+    filter: none;
+  }
+
+  @media screen(lg) {
+    .overlapping-container {
+      --card-size: 220px;
+
+      /** Permits to center the cards using half their sizes **/
+      margin-top: -110px;
+      margin-bottom: 0px;
+    }
   }
 
   /* Engineer cards */

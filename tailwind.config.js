@@ -20,7 +20,6 @@ module.exports = {
 				dark: 'var(--dark-background)',
 				'section-engineering-bg': 'rgb(var(--section-engineering-bg) / var(--alpha))',
 				'section-excursions-bg': 'rgb(var(--section-excursions-bg) / var(--alpha))',
-				'section-thoughts-bg': 'rgb(var(--section-thoughts-bg) / var(--alpha))',
       },
 			scale: {
         '103': '1.03',
@@ -213,6 +212,9 @@ module.exports = {
           },
         }
 			},
+			width: theme => ({
+        'sm': theme("screens.sm"),
+      })
     },
   },
   plugins: [

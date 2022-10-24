@@ -24,14 +24,14 @@ export default function Index() {
       <Container>
         <Nav />
         <Intro />
-        <section className="text-white flex flex-col pt-16 pb-32 space-y-48 w-full justify-center">
+        <section className="text-white flex flex-col pt-16 pb-32 space-y-48 m-auto sm:w-sm lg:w-full justify-center">
           <Section
             href="/blog/engineering"
             title="Engineering articles"
             content="Learn more about the engineering work I have been doing the past years. A place where I talk about performance tuning, software designing, web application development and devops stuff !"
           >
             <OverlappingCardsEngineer />
-            <CodingManSVG className="absolute -translate-y-[66%] translate-x-7" />
+            <CodingManSVG className="absolute -translate-y-[124%] lg:-translate-y-[66%] translate-x-7" />
           </Section>
           <Section
             className="flex-row-reverse"
@@ -40,7 +40,7 @@ export default function Index() {
             content="A group of posts about the excursions and the projects which really impacted me. Trailing, climbing, alpinism, hikes... Dive into some of my passions !"
           >
             <OverlappingCardsExcursions />
-            <ClimbingManSVG className="absolute -translate-y-6 -translate-x-7" />
+            <ClimbingManSVG className="absolute -translate-y-20 lg:-translate-y-6 -translate-x-7" />
           </Section>
         </section>
       </Container>

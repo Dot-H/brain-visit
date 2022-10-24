@@ -48,7 +48,6 @@ export type PostMetadata = {
 export enum PostTag {
   ENGINEERING = "engineering",
   EXCURSIONS = "excursions",
-  THOUGHTS = "thoughts",
 }
 const TAG_VALUES = new Set(Object.values(PostTag));
 

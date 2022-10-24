@@ -32,7 +32,6 @@ describe("getPostBySlug", () => {
         description: "This post has a description",
         releaseDate: "2022-01-01",
         title: "Another post",
-        tags: ["thoughts"],
       },
     } as post.Post);
   });
