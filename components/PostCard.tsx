@@ -1,9 +1,10 @@
 // Components
+import Chip from "components/Chip";
 import Image from "next/image";
 import Link from "next/link";
 
 // Types
-import type { Post } from "lib/posts";
+import type { PostTag, Post } from "lib/posts";
 
 export type PostCardProps = React.HTMLAttributes<HTMLElement> & {
   post: Readonly<Post>;
@@ -14,7 +15,7 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
   return (
     <Link href={href}>
       <article
-        className={`md:w-96 w-[350px] drop-shadow-2xl hover:scale-103 hover:cursor-pointer transition ease-out max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700`}
+        className={`md:w-96 w-[350px] drop-shadow-2xl hover:scale-103 hover:cursor-pointer transition ease-out max-w-sm bg-white rounded-2xl shadow-md bg-rose-200/25 dark:bg-zinc-700/25`}
         {...rest}
       >
         <Image
@@ -24,7 +25,14 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
           className="rounded-t-lg"
           alt="cover"
         />
-        <div className="flex flex-col p-5 h-[320px]">
+        <div className="flex flex-col p-5 pt-2 lg:h-[320px]">
+          <div className="flex space-x-2 mb-3">
+            {post.metadata.tags.map((t) => (
+              <Chip color={TAG_COLOR[t]} key={`tag-${post.slug}-${t}`}>
+                {t}
+              </Chip>
+            ))}
+          </div>
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             {post.metadata.title}
           </h5>
@@ -42,6 +50,16 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
       </article>
     </Link>
   );
+};
+
+const TAG_COLOR: Readonly<Record<PostTag, string>> = {
+  climbing: "gray-500",
+  design: "purple-400",
+  devops: "rose-400",
+  golang: "teal-500",
+  hiking: "green-600",
+  outdoor: "blue-500",
+  performance: "orange-400",
 };
 
 export default PostCard;

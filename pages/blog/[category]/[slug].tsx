@@ -20,7 +20,7 @@ import markdownToHtml from "lib/markdownToHtml";
 import type { GetStaticPathsResult, GetStaticProps } from "next";
 
 type CategoryPostListProps = {
-  currentCategory: post.PostTag;
+  currentCategory: post.PostCategory;
   post: Readonly<post.Post>;
   morePosts: ReadonlyArray<post.Post>;
 };
@@ -58,7 +58,7 @@ export default function CategoryPostList({
             </article>
             <MorePosts
               posts={morePosts}
-              categoryTag={currentCategory}
+              category={currentCategory}
               className="mb-32"
             />
           </>
@@ -71,7 +71,7 @@ export default function CategoryPostList({
 type Params = {
   params: {
     slug: string;
-    tag: post.PostTag;
+    category: post.PostCategory;
   };
 };
 
@@ -82,7 +82,7 @@ export const getStaticProps: GetStaticProps<
   const p = post.getPostBySlug(params.slug);
   const content = await markdownToHtml(p.content || "");
   const posts = post.getPostsMatching(
-    (p) => p.metadata.tags.includes(params.tag) && p.slug !== params.slug
+    (p) => p.metadata.category === params.category && p.slug !== params.slug
   );
 
   return {
@@ -91,7 +91,7 @@ export const getStaticProps: GetStaticProps<
         ...p,
         content,
       },
-      currentCategory: params.tag,
+      currentCategory: params.category,
       morePosts: posts,
     },
   };
@@ -104,9 +104,9 @@ export async function getStaticPaths(): Promise<
   const posts = post.getPostsMatching(Boolean);
 
   return {
-    paths: posts.flatMap((p) =>
-      p.metadata.tags.map((tag) => ({ params: { tag, slug: p.slug } }))
-    ),
+    paths: posts.map((p) => ({
+      params: { category: p.metadata.category, slug: p.slug },
+    })),
     fallback: false,
   };
 }

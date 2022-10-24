@@ -34,6 +34,9 @@ export type PostMetadata = {
   /** Displayed title of the post */
   title: string;
 
+  /** Category used to qualify a post */
+  category: PostCategory;
+
   /** List of the tags used to qualify a post */
   tags: PostTag[];
 
@@ -44,10 +47,22 @@ export type PostMetadata = {
   description?: string;
 };
 
-/** Valid value as a {@link Post}'s tag */
-export enum PostTag {
+/** Valid value as a {@link Post}'s category */
+export enum PostCategory {
   ENGINEERING = "engineering",
   EXCURSIONS = "excursions",
+}
+const CATEGORY_VALUES = new Set(Object.values(PostCategory));
+
+/** Valid value as a {@link Post}'s tag */
+export enum PostTag {
+  CLIMBING = "climbing",
+  DESIGN = "design",
+  DEVOPS = "devops",
+  GOLANG = "golang",
+  HIKING = "hiking",
+  OUTDOOR = "outdoor",
+  PERFORMANCE = "performance",
 }
 const TAG_VALUES = new Set(Object.values(PostTag));
 
@@ -114,6 +129,15 @@ export function _assertMetadataSanity(
   const releaseDate = new Date(data["releaseDate"] as string);
   if (isNaN(releaseDate.getDate())) {
     throw Error("releaseDate value is not a valid yyyy-mm-dd date");
+  }
+
+  /** Ensure that the category is valid */
+  if (typeof data["category"] !== "string") {
+    throw Error("category is not a valid string");
+  }
+  const badCategory = !CATEGORY_VALUES.has(data["category"] as PostCategory);
+  if (badCategory) {
+    throw Error(`unknown category "${badCategory}"`);
   }
 
   /** Ensure that all the values in the tags are valid */

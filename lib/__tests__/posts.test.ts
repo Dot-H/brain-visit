@@ -16,7 +16,8 @@ describe("getPostBySlug", () => {
       metadata: {
         releaseDate: "2021-03-22",
         title: "Optimisation de conversion SQL vers JSON",
-        tags: ["engineering"],
+        category: post.PostCategory.ENGINEERING,
+        tags: ["performance", "golang"],
       },
     } as post.Post);
   });
@@ -32,6 +33,8 @@ describe("getPostBySlug", () => {
         description: "This post has a description",
         releaseDate: "2022-01-01",
         title: "Another post",
+        category: post.PostCategory.EXCURSIONS,
+        tags: [post.PostTag.CLIMBING, post.PostTag.OUTDOOR],
       },
     } as post.Post);
   });
@@ -41,7 +44,8 @@ describe("_assertMetadataSanity", () => {
   const validMetadata: Readonly<post.PostMetadata> = {
     releaseDate: "2022-02-02",
     title: "test",
-    tags: [post.PostTag.ENGINEERING, post.PostTag.EXCURSIONS],
+    category: post.PostCategory.EXCURSIONS,
+    tags: [post.PostTag.CLIMBING, post.PostTag.OUTDOOR],
     description: "This is a description",
   };
 

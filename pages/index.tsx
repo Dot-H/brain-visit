@@ -55,8 +55,8 @@ const OverlappingCardsEngineer = () => (
       <Image
         alt={'"Zero configuration query language" post\'s cover'}
         src={"/assets/blog/posts/zero-configuration-ql/cover.webp"}
-        width={300}
-        height={300}
+        width={220}
+        height={220}
       />
     </div>
     <div id="card-two-engineer" className="card">

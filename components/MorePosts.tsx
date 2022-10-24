@@ -2,14 +2,14 @@
 import PostCard from "components/PostCard";
 
 // Types
-import type { Post, PostTag } from "lib/posts";
+import type { Post, PostCategory } from "lib/posts";
 
 export type MorePostsProps = React.HTMLAttributes<HTMLElement> & {
   posts: ReadonlyArray<Post>;
-  categoryTag: Readonly<PostTag>;
+  category: Readonly<PostCategory>;
 };
 
-const MorePosts = ({ posts, categoryTag, ...rest }: MorePostsProps) => {
+const MorePosts = ({ posts, category, ...rest }: MorePostsProps) => {
   return (
     <section {...rest}>
       <h4 className="text-center mb-8 text-4xl tracking-tighter leading-tight">
@@ -20,7 +20,7 @@ const MorePosts = ({ posts, categoryTag, ...rest }: MorePostsProps) => {
           <PostCard
             key={post.slug}
             post={post}
-            href={`/blog/${categoryTag}/${post.slug}`}
+            href={`/blog/${category}/${post.slug}`}
           />
         ))}
       </div>

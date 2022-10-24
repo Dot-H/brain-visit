@@ -25,9 +25,10 @@ A post is represented by a folder. The name of the folder gives the post's slug.
 In this section we will describe the mandatory and optional metadata present at
 the top of the `index.mdx` file.
 
-| Name            | Description                                                                          | Mandatory | Default value                           |
-| --------------- | ------------------------------------------------------------------------------------ | --------- | --------------------------------------- |
-| **releaseDate** | Release date of the post in the format **yyyy-mm-dd**                                | **true**  | _Mandatory_                             |
-| **title**       | Title of the post                                                                    | **true**  | _Mandatory_                             |
-| **Tags**        | List of the tags used for the post. Valid values are **engineering**, **excursions** | **true**  | _Mandatory_                             |
-| **Description** | Description of the article, must be at much **TO DEFINE** letters                    | **false** | **TO DEFINE** first letters of the post |
+| Name            | Description                                                                                                                                     | Mandatory | Default value                           |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------------------------------------- |
+| **releaseDate** | Release date of the post in the format **yyyy-mm-dd**                                                                                           | **true**  | _Mandatory_                             |
+| **title**       | Title of the post                                                                                                                               | **true**  | _Mandatory_                             |
+| **Category**    | Category used for the post. Valid value is **engineering**, **excursions**                                                                      | **true**  | _Mandatory_                             |
+| **Tags**        | List of the tags used for the post. Valid values are **performance**, **golang**, **design**, **devops**, **climbing**, **outdoor**, **hiking** | **true**  | _Mandatory_                             |
+| **Description** | Description of the article, must be at much **TO DEFINE** letters                                                                               | **false** | **TO DEFINE** first letters of the post |
