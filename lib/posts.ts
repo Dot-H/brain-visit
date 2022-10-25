@@ -4,9 +4,14 @@
  * [this doc](../doc/posts.md)
  */
 
+// Utils
 import fs from "fs";
 import matter from "gray-matter";
+import { getPlaiceholder } from "plaiceholder";
 import { join } from "path";
+
+// Types
+import type { ImageProps } from "next/future/image";
 
 /**
  * Directory into which all the posts are present.
@@ -25,6 +30,9 @@ export type Post = {
 
   /** Metadata used to describe the post */
   metadata: PostMetadata;
+
+  /** Data about the cover image */
+  cover: CoverProps;
 };
 
 export type PostMetadata = {
@@ -45,6 +53,14 @@ export type PostMetadata = {
    * index.mdx metadata.
    */
   description?: string;
+};
+
+export type CoverProps = {
+  /** src URL permitting to retrieve the post's cover image */
+  srcURL: string;
+
+  /** Props to pass as {@link ImageProps} to the next/future/image component */
+  imageProps: Omit<ImageProps, "alt">;
 };
 
 /** Valid value as a {@link Post}'s category */
@@ -79,7 +95,11 @@ export function getPostSlugs(): string[] {
  * @returns The {@link Post} structure of the post corresponding to the given
  * slug.
  */
-export function getPostBySlug(slug: string): Post {
+export async function getPostBySlug(slug: string): Promise<Post> {
+  // Launch the cover building before waiting the fs to read in order to
+  // parallelize the computing
+  const coverPromise = _buildCoverProps(slug);
+
   const indexMdxPath = join(POST_DIRECTORY, slug, "index.mdx");
   const fileContents = fs.readFileSync(indexMdxPath, "utf8");
   const { data, content } = matter(fileContents);
@@ -92,19 +112,25 @@ export function getPostBySlug(slug: string): Post {
     throw new Error(`error parsing ${slug}'s metadata: ${error}`);
   }
 
-  return { slug, content, metadata: data };
+  return { slug, content, metadata: data, cover: await coverPromise };
 }
 
-export function getPostsMatching(predicate: (p: Post) => boolean): Array<Post> {
+export async function getPostsMatching(
+  predicate: (p: Post) => boolean
+): Promise<Array<Post>> {
   const postsSlug = getPostSlugs();
   const out: Array<Post> = [];
 
-  for (const slug of postsSlug) {
-    const p = getPostBySlug(slug);
-    if (predicate(p)) {
-      out.push(p);
-    }
-  }
+  await Promise.all(
+    postsSlug.map(async (slug) => {
+      const p = await getPostBySlug(slug);
+      if (predicate(p)) {
+        out.push(p);
+      }
+
+      return p;
+    })
+  );
 
   return out;
 }
@@ -148,4 +174,33 @@ export function _assertMetadataSanity(
   if (badTag) {
     throw Error(`unknown tag "${badTag}"`);
   }
+}
+
+/**
+ * @returns the relative URL permitting to retrieve a post's cover image
+ *
+ * @see [the doc](../doc/posts.md) to understand how this URL is computed.
+ */
+export function postCoverUrl(slug: string): string {
+  return `/assets/blog/posts/${slug}/cover.webp`;
+}
+
+/**
+ * Builds the props to pass to the Image component when rendering the
+ * cover.
+ *
+ * @param slug slug of the post
+ */
+async function _buildCoverProps(slug: string): Promise<CoverProps> {
+  const srcURL = postCoverUrl(slug);
+  const plaiceholder = await getPlaiceholder(srcURL);
+
+  return {
+    srcURL,
+    imageProps: {
+      ...plaiceholder.img,
+      placeholder: "blur",
+      blurDataURL: plaiceholder.base64,
+    },
+  };
 }

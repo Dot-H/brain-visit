@@ -1,6 +1,6 @@
 // Components
 import Chip from "components/Chip";
-import Image from "next/future/image";
+import CoverImage from "./CoverImage";
 import Link from "next/link";
 
 // Types
@@ -18,12 +18,11 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
         className={`md:w-96 w-[350px] drop-shadow-2xl hover:scale-103 hover:cursor-pointer transition ease-out max-w-sm bg-white rounded-2xl shadow-md bg-rose-200/25 dark:bg-zinc-700/25`}
         {...rest}
       >
-        <Image
-          src={`/assets/blog/posts/${post.slug}/cover.webp`}
+        <CoverImage
+          post={post}
           width={350}
           height={300}
           style={{ width: 350, height: 300, margin: "auto" }}
-          alt={`${post.slug} cover`}
         />
         <div className="flex flex-col p-5 pt-2 lg:h-[320px]">
           <div className="flex space-x-2 mb-3">

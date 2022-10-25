@@ -2,17 +2,29 @@ import * as post from "../posts";
 
 test("getPostSlugs", () => {
   const slugs = post.getPostSlugs();
-  expect(slugs).toEqual(["another-post", "sql-to-json"]);
+  expect(slugs).toEqual(["aiguilles-rouges", "sql-to-json"]);
 });
 
 describe("getPostBySlug", () => {
-  test("sql-to-json", () => {
-    const tested = post.getPostBySlug("sql-to-json");
+  test("sql-to-json", async () => {
+    const tested = await post.getPostBySlug("sql-to-json");
     expect(tested).toEqual({
       slug: "sql-to-json",
       content: `
 # sql-to-json content
 `,
+      cover: {
+        imageProps: {
+          blurDataURL:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAP0lEQVR4nAE0AMv/AP///19ycUFmYvr6+gCzt7YAVEwAU02LmJYAAAsKmqmmipqXABkYAO3s7d7o5+bm5uLi4q+sHAX38/QCAAAAAElFTkSuQmCC",
+          height: 512,
+          placeholder: "blur",
+          src: "/assets/blog/posts/sql-to-json/cover.webp",
+          type: "webp",
+          width: 512,
+        },
+        srcURL: "/assets/blog/posts/sql-to-json/cover.webp",
+      },
       metadata: {
         releaseDate: "2021-03-22",
         title: "Optimisation de conversion SQL vers JSON",
@@ -22,13 +34,25 @@ describe("getPostBySlug", () => {
     } as post.Post);
   });
 
-  test("another-post", () => {
-    const tested = post.getPostBySlug("another-post");
+  test("aiguilles-rouges", async () => {
+    const tested = await post.getPostBySlug("aiguilles-rouges");
     expect(tested).toEqual({
-      slug: "another-post",
+      slug: "aiguilles-rouges",
       content: `
-# another-post content
+# aiguilles-rouges content
 `,
+      cover: {
+        imageProps: {
+          blurDataURL:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAPUlEQVR4nGM4tzj389Hu/09W/P++m4GPidfNzCjKxSbR243BUF3d29khwN0lxM2WQVlRIzPIMcrDMczNDgBEFRIZPOLUnwAAAABJRU5ErkJggg==",
+          height: 1631,
+          placeholder: "blur",
+          src: "/assets/blog/posts/aiguilles-rouges/cover.webp",
+          type: "webp",
+          width: 1631,
+        },
+        srcURL: "/assets/blog/posts/aiguilles-rouges/cover.webp",
+      },
       metadata: {
         description: "This post has a description",
         releaseDate: "2022-01-01",

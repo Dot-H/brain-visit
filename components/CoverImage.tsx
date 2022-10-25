@@ -1,40 +1,20 @@
 // Components
-import Link from "next/link";
+import Image, { ImageProps } from "next/future/image";
 
-// Utils
-import cn from "classnames";
+// Types
+import type { Post } from "lib/posts";
 
-type CoverImageProps = {
-  title: string;
-  src: string;
-  slug?: string;
+type CoverImageProps = Partial<ImageProps> & {
+  post: Readonly<Pick<Post, "cover" | "metadata">>;
 };
 
-const CoverImage = ({ title, src, slug }: CoverImageProps) => {
-  const image = (
-    <img
-      src={src}
-      alt={`Cover Image for ${title}`}
-      className={cn(
-        "shadow-sm",
-        {
-          "hover:shadow-lg transition-shadow duration-200": slug,
-        },
-        "flex m-auto"
-      )}
-    />
-  );
-
+const CoverImage = ({ post, ...props }: CoverImageProps) => {
   return (
-    <div className="sm:mx-0 display-block">
-      {slug ? (
-        <Link as={`/posts/${slug}`} href="/posts/[slug]">
-          <a aria-label={title}>{image}</a>
-        </Link>
-      ) : (
-        image
-      )}
-    </div>
+    <Image
+      {...post.cover.imageProps}
+      alt={`"${post.metadata.title}" cover`}
+      {...props}
+    />
   );
 };
 

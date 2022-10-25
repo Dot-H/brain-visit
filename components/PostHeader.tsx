@@ -2,25 +2,26 @@
 import CoverImage from "components/CoverImage";
 import PostTitle from "components/PostTitle";
 
+// Types
+import type { Post } from "lib/posts";
+
 type PostHeaderProps = {
-  title: string;
-  coverImage: string;
-  date: string;
+  post: Readonly<Post>;
 };
 
-const PostHeader = ({ title, coverImage, date }: PostHeaderProps) => {
+const PostHeader = ({ post }: PostHeaderProps) => {
   return (
     <>
-      <PostTitle className="mb-3">{title}</PostTitle>
+      <PostTitle className="mb-3">{post.metadata.title}</PostTitle>
       <span className="text-lg block text-center text-secondary mb-3">
-        {new Date(date).toLocaleDateString(undefined, {
+        {new Date(post.metadata.releaseDate).toLocaleDateString(undefined, {
           day: "numeric",
           month: "long",
           year: "numeric",
         })}
       </span>
       <div className="mb-8 md:mb-16 sm:mx-0 text-center">
-        <CoverImage title={title} src={coverImage} />
+        <CoverImage post={post} className={"shadow-sm flex m-auto"} />
       </div>
     </>
   );

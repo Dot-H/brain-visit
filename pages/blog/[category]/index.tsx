@@ -26,7 +26,7 @@ export default function Index({ posts, category }: IndexProps) {
       </Head>
       <Container>
         <Nav />
-        <section className="my-12 lg:my-28 grid content-center gap-12 md:gap-6 xl:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center">
+        <section className="my-12 lg:my-24 grid content-center gap-12 md:gap-6 xl:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center">
           {posts.map((p) => (
             <PostCard
               key={`post-card-${p.slug}`}
@@ -43,8 +43,8 @@ export default function Index({ posts, category }: IndexProps) {
 export const getStaticProps: GetStaticProps<
   IndexProps,
   { category: post.PostCategory }
-> = ({ params }) => {
-  const posts = post.getPostsMatching(
+> = async ({ params }) => {
+  const posts = await post.getPostsMatching(
     (p) => p.metadata.category === params.category
   );
 

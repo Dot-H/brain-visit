@@ -49,11 +49,7 @@ export default function CategoryPostList({
                 {/** TODO: og:image */}
                 <meta property="og:image" content={"FIXME"} />
               </Head>
-              <PostHeader
-                title={p.metadata.title}
-                coverImage={`/assets/blog/posts/${p.slug}/cover.webp`}
-                date={p.metadata.releaseDate}
-              />
+              <PostHeader post={p} />
               <PostBody htmlContent={p.content} />
             </article>
             <MorePosts
@@ -79,9 +75,9 @@ export const getStaticProps: GetStaticProps<
   CategoryPostListProps,
   Params["params"]
 > = async ({ params }) => {
-  const p = post.getPostBySlug(params.slug);
+  const p = await post.getPostBySlug(params.slug);
   const content = await markdownToHtml(p.content || "");
-  const posts = post.getPostsMatching(
+  const posts = await post.getPostsMatching(
     (p) => p.metadata.category === params.category && p.slug !== params.slug
   );
 
@@ -101,7 +97,7 @@ export async function getStaticPaths(): Promise<
   GetStaticPathsResult<Params["params"]>
 > {
   // Retrieve all the posts
-  const posts = post.getPostsMatching(Boolean);
+  const posts = await post.getPostsMatching(Boolean);
 
   return {
     paths: posts.map((p) => ({
