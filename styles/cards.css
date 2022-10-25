@@ -8,7 +8,7 @@
     --card-size: 140px;
 
     /** Permits to compensate the padding introduced by the translateY of the cards **/
-    margin-bottom: -140px;
+    margin-bottom: -70px;
 
     height: 100%; /* Permits the viewport to correctly compute the global height of the page */
     transition: 2s;
@@ -30,6 +30,8 @@
     border-radius: 20px;
     background-color: #bbbbb885;
     filter: none;
+    width: var(--card-size);
+    height: var(--card-size);
   }
 
   @media screen(lg) {

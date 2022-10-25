@@ -15,6 +15,12 @@ import MountainsBackgroud from "components/svgs/MountainsBackground";
 import React from "react";
 
 // Images
+import AiguillesRougesCover from "public/assets/blog/posts/aiguilles-rouges/cover.webp";
+import QueyrasCover from "public/assets/blog/posts/queyras/cover.jpg";
+import SqlToJSONCover from "public/assets/blog/posts/sql-to-json/cover.webp";
+import StartupStagingEnvCover from "public/assets/blog/posts/startup-staging-env/cover.webp";
+import UCPAAlpinismCover from "public/assets/blog/posts/ucpa-alpinism/cover.webp";
+import ZeroConfigQlCover from "public/assets/blog/posts/zero-configuration-ql/cover.webp";
 
 export default function Index() {
   return (
@@ -56,25 +62,28 @@ const OverlappingCardsEngineer = () => (
     <div id="card-one-engineer" className="card">
       <Image
         alt={'"Zero configuration query language" post\'s cover'}
-        src={"/assets/blog/posts/zero-configuration-ql/cover.webp"}
+        src={ZeroConfigQlCover}
         width={220}
         height={220}
+        placeholder="blur"
       />
     </div>
     <div id="card-two-engineer" className="card">
       <Image
         alt={"\"Setting up a startup's staging environment\" post's cover"}
-        src={"/assets/blog/posts/startup-staging-env/cover.webp"}
+        src={StartupStagingEnvCover}
         width={220}
         height={220}
+        placeholder="blur"
       />
     </div>
     <div id="card-three-engineer" className="card">
       <Image
         alt={'"Convert SQL results to JSON representation" post\'s cover'}
-        src={"/assets/blog/posts/sql-to-json/cover.webp"}
+        src={SqlToJSONCover}
         width={220}
         height={220}
+        placeholder="blur"
       />
     </div>
   </div>
@@ -85,26 +94,28 @@ const OverlappingCardsExcursions = () => (
     <div id="card-one-excursions" className="card">
       <Image
         alt={"Dry tooling"}
-        src={"/assets/blog/posts/ucpa-alpinism/cover.webp"}
+        src={UCPAAlpinismCover}
         width={220}
         height={220}
+        placeholder="blur"
       />
     </div>
     <div id="card-two-excursions" className="card">
       <Image
         alt={'"Circuling the Queyras by the summits" post\'s cover'}
-        src={"/assets/blog/posts/queyras/cover.jpg"}
+        src={QueyrasCover}
         width={220}
         height={220}
-        style={{ width: 220, height: 220 }}
+        placeholder="blur"
       />
     </div>
     <div id="card-three-excursions" className="card">
       <Image
         alt={'"Circuling the Queyras by the summits" post\'s cover'}
-        src={"/assets/blog/posts/aiguilles-rouges/cover.webp"}
+        src={AiguillesRougesCover}
         width={220}
         height={220}
+        placeholder="blur"
       />
     </div>
   </div>
