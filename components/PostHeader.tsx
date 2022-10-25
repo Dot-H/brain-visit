@@ -11,18 +11,16 @@ type PostHeaderProps = {
 const PostHeader = ({ title, coverImage, date }: PostHeaderProps) => {
   return (
     <>
-      <PostTitle>{title}</PostTitle>
+      <PostTitle className="mb-3">{title}</PostTitle>
+      <span className="text-lg block text-center text-secondary mb-3">
+        {new Date(date).toLocaleDateString(undefined, {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
+      </span>
       <div className="mb-8 md:mb-16 sm:mx-0 text-center">
         <CoverImage title={title} src={coverImage} />
-      </div>
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6 text-lg">
-          {new Date(date).toLocaleDateString(undefined, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </div>
       </div>
     </>
   );

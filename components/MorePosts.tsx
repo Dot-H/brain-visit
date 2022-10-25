@@ -15,8 +15,8 @@ const MorePosts = ({ posts, category, ...rest }: MorePostsProps) => {
       <h4 className="text-center mb-8 text-4xl tracking-tighter leading-tight">
         Other posts might interest you
       </h4>
-      <div className="grid items-center content-center gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center">
-        {posts.map((post) => (
+      <div className="list justify-center">
+        {posts.slice(0, 3).map((post) => (
           <PostCard
             key={post.slug}
             post={post}

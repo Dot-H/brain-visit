@@ -43,7 +43,7 @@ export default function CategoryPostList({
           <PostTitle>Loading…</PostTitle>
         ) : (
           <>
-            <article className="mb-32 mx-2">
+            <article className="mt-16 mb-32 mx-2">
               <Head>
                 <title key={"title"}>{p.metadata.title}</title>
                 {/** TODO: og:image */}

@@ -22,7 +22,7 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
           src={`/assets/blog/posts/${post.slug}/cover.webp`}
           width={350}
           height={300}
-          style={{ width: 350, height: 300 }}
+          style={{ width: 350, height: 300, margin: "auto" }}
           alt={`${post.slug} cover`}
         />
         <div className="flex flex-col p-5 pt-2 lg:h-[320px]">

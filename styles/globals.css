@@ -21,7 +21,7 @@
   --dark-section-engineering-bg: 149 164 161;
   --dark-section-excursions-bg: 12 52 109;
   --dark-text-primary: #fffff;
-  --dark-text-secondary: #506770;
+  --dark-text-secondary: rgb(107 114 128);
 }
 
 html {
@@ -48,6 +48,18 @@ html.dark {
   --text-secondary: var(--dark-text-secondary);
   --section-engineering-bg: var(--dark-section-engineering-bg);
   --section-excursions-bg: var(--dark-section-excursions-bg);
+}
+
+@layer components {
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+
+  .list > * {
+    @apply m-4;
+  }
 }
 
 .alpha-on-hover:hover {
