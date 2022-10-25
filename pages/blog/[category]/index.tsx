@@ -22,7 +22,7 @@ export default function Index({ posts, category }: IndexProps) {
   return (
     <Layout>
       <Head>
-        <title>Alb&apos;s blog - {category}</title>
+        <title key={"title"}>{`Alb's blog - ${category}`}</title>
       </Head>
       <Container>
         <Nav />

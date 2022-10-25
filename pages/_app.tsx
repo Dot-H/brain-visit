@@ -1,5 +1,5 @@
 // Styles
-import "styles/index.css";
+import "styles/globals.css";
 import "styles/text.css";
 import "styles/prose.css";
 import "styles/cards.css";

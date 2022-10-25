@@ -1,7 +1,7 @@
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config"; // Your tailwind config
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 const fullConfig = resolveConfig(tailwindConfig);
@@ -20,7 +20,7 @@ export function useBreakpoint<K extends BreakpointKey>(breakpointKey: K) {
   // Handles hydratation issue due to the fact that the initial UI does not
   // match what was rendered on the server.
   const [isClient, setIsClient] = useState(false);
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (typeof window !== "undefined") setIsClient(true);
   }, []);
 

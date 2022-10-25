@@ -1,6 +1,6 @@
 // Components
 import Head from "next/head";
-import Image from "next/image";
+import Image from "next/future/image";
 import AboutMe from "components/AboutMe";
 import Container from "components/container";
 import Intro from "components/Intro";
@@ -43,6 +43,7 @@ export default function Index() {
             <OverlappingCardsExcursions />
             <ClimbingManSVG className="absolute -translate-y-20 lg:-translate-y-6 -translate-x-7" />
           </Section>
+          <AboutMe className="h-auto z-20" />
         </section>
       </Container>
       <MountainsBackgroud />
@@ -95,6 +96,7 @@ const OverlappingCardsExcursions = () => (
         src={"/assets/blog/posts/queyras/cover.jpg"}
         width={220}
         height={220}
+        style={{ width: 220, height: 220 }}
       />
     </div>
     <div id="card-three-excursions" className="card">

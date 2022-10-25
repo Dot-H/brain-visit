@@ -1,6 +1,6 @@
 // Components
 import Chip from "components/Chip";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 
 // Types
@@ -20,10 +20,10 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
       >
         <Image
           src={`/assets/blog/posts/${post.slug}/cover.webp`}
-          width={384}
-          height={250}
-          className="rounded-t-lg"
-          alt="cover"
+          width={350}
+          height={300}
+          style={{ width: 350, height: 300 }}
+          alt={`${post.slug} cover`}
         />
         <div className="flex flex-col p-5 pt-2 lg:h-[320px]">
           <div className="flex space-x-2 mb-3">
@@ -52,6 +52,15 @@ const PostCard = ({ post, href, ...rest }: PostCardProps) => {
   );
 };
 
+// Information for tailwindCSS:
+// See https://stackoverflow.com/questions/69687530/dynamically-build-classnames-in-tailwindcss
+// text-gray-500 border-gray-500
+// text-purple-400 border-purple-400
+// text-rose-400 border-rose-400
+// text-teal-500 border-teal-500
+// text-green-600 border-green-600
+// text-blue-500 border-blue-500
+// text-orange-400 border-orange-400
 const TAG_COLOR: Readonly<Record<PostTag, string>> = {
   climbing: "gray-500",
   design: "purple-400",
