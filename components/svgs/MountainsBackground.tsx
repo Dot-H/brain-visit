@@ -1,7 +1,7 @@
 const MountainsBackgroud = () => {
   return (
     <svg
-      width="100vw"
+      width="100%"
       preserveAspectRatio="none"
       viewBox="0 0 1440 666"
       fill="none"

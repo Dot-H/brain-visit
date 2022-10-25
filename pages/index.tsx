@@ -1,6 +1,7 @@
 // Components
-import Image from "next/image";
 import Head from "next/head";
+import Image from "next/image";
+import AboutMe from "components/AboutMe";
 import Container from "components/container";
 import Intro from "components/Intro";
 import Layout from "components/Layout";
@@ -24,7 +25,7 @@ export default function Index() {
       <Container>
         <Nav />
         <Intro />
-        <section className="text-white flex flex-col pt-16 pb-32 space-y-48 m-auto sm:w-sm lg:w-full justify-center">
+        <section className="text-white z-50 flex flex-col pt-16 pb-32 space-y-48 m-auto sm:w-sm lg:w-full justify-center">
           <Section
             href="/blog/engineering"
             title="Engineering articles"
