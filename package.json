@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "next build && next-sitemap",
     "lint": "next lint",
     "start": "next start",
     "test": "jest --watch",
@@ -15,6 +15,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@next/env": "12.3.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.7",
@@ -23,6 +24,7 @@
     "gatsby-remark-vscode": "^3.3.1",
     "gray-matter": "^4.0.3",
     "next": "12.3.0",
+    "next-sitemap": "^3.1.29",
     "next-themes": "^0.2.1",
     "plaiceholder": "^2.5.0",
     "react": "^18.2.0",

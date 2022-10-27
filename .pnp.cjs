@@ -28,6 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@next/env", "npm:12.3.0"],\
             ["@tailwindcss/aspect-ratio", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.4.2"],\
             ["@tailwindcss/line-clamp", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.4.2"],\
             ["@tailwindcss/typography", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.5.7"],\
@@ -49,6 +50,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:29.2.2"],\
             ["jest-environment-jsdom", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:29.2.2"],\
             ["next", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:12.3.0"],\
+            ["next-sitemap", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:3.1.29"],\
             ["next-themes", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.2.1"],\
             ["plaiceholder", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:2.5.0"],\
             ["postcss", "npm:8.4.18"],\
@@ -872,6 +874,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@bcoe-v8-coverage-npm-0.2.3-9e27b3c57e-850f930553.zip/node_modules/@bcoe/v8-coverage/",\
           "packageDependencies": [\
             ["@bcoe/v8-coverage", "npm:0.2.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@corex/deepmerge", [\
+        ["npm:4.0.29", {\
+          "packageLocation": "./.yarn/cache/@corex-deepmerge-npm-4.0.29-aacab9d89d-78626fd29c.zip/node_modules/@corex/deepmerge/",\
+          "packageDependencies": [\
+            ["@corex/deepmerge", "npm:4.0.29"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2689,6 +2700,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["brain-visit", "workspace:."],\
+            ["@next/env", "npm:12.3.0"],\
             ["@tailwindcss/aspect-ratio", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.4.2"],\
             ["@tailwindcss/line-clamp", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.4.2"],\
             ["@tailwindcss/typography", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.5.7"],\
@@ -2710,6 +2722,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:29.2.2"],\
             ["jest-environment-jsdom", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:29.2.2"],\
             ["next", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:12.3.0"],\
+            ["next-sitemap", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:3.1.29"],\
             ["next-themes", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:0.2.1"],\
             ["plaiceholder", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:2.5.0"],\
             ["postcss", "npm:8.4.18"],\
@@ -7388,6 +7401,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "react-dom",\
             "react",\
             "sass"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["next-sitemap", [\
+        ["npm:3.1.29", {\
+          "packageLocation": "./.yarn/cache/next-sitemap-npm-3.1.29-c252627980-e5f922bd96.zip/node_modules/next-sitemap/",\
+          "packageDependencies": [\
+            ["next-sitemap", "npm:3.1.29"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:3.1.29", {\
+          "packageLocation": "./.yarn/__virtual__/next-sitemap-virtual-9ace9e7907/0/cache/next-sitemap-npm-3.1.29-c252627980-e5f922bd96.zip/node_modules/next-sitemap/",\
+          "packageDependencies": [\
+            ["next-sitemap", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:3.1.29"],\
+            ["@corex/deepmerge", "npm:4.0.29"],\
+            ["@next/env", "npm:12.3.0"],\
+            ["@types/next", null],\
+            ["@types/next__env", null],\
+            ["minimist", "npm:1.2.7"],\
+            ["next", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:12.3.0"]\
+          ],\
+          "packagePeers": [\
+            "@next/env",\
+            "@types/next",\
+            "@types/next__env",\
+            "next"\
           ],\
           "linkType": "HARD"\
         }]\

@@ -34,5 +34,6 @@ next-env.d.ts
 
 # robots.txt
 # This file is ignored because it is generated automatically through
-# "scripts/generate-robots.js"
+# "next-sitemap"
 public/robots.txt
+public/sitemap*.xml
