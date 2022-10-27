@@ -60,7 +60,7 @@ const ArticleSection = ({
           <p className="text-justify" style={{ marginTop: 0 }}>
             {content}
           </p>
-          <a className="mt-auto" style={{ display: "block" }}>
+          <a className="mt-auto" style={{ display: "block" }} href={href}>
             Read more &gt;
           </a>
         </div>

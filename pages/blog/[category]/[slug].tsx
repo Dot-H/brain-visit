@@ -2,7 +2,7 @@
 import Container from "components/container";
 import ErrorPage from "next/error";
 import Head from "next/head";
-import Layout from "components/Layout";
+import Page from "components/Page";
 import MorePosts from "components/MorePosts";
 import Nav from "components/Nav";
 import PostBody from "components/PostBody";
@@ -36,7 +36,7 @@ export default function CategoryPostList({
   }
 
   return (
-    <Layout>
+    <Page>
       <Container>
         <Nav />
         {router.isFallback ? (
@@ -60,7 +60,7 @@ export default function CategoryPostList({
           </>
         )}
       </Container>
-    </Layout>
+    </Page>
   );
 }
 

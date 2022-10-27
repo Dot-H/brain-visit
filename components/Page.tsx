@@ -1,10 +1,10 @@
-import Meta from "./meta";
+import Meta from "components/Meta";
 
-type LayoutPRops = {
+type PageProps = {
   children: Readonly<React.ReactNode> | ReadonlyArray<React.ReactNode>;
 };
 
-const Layout = ({ children }: LayoutPRops) => {
+const Page = ({ children }: PageProps) => {
   return (
     <>
       <Meta />
@@ -15,4 +15,4 @@ const Layout = ({ children }: LayoutPRops) => {
   );
 };
 
-export default Layout;
+export default Page;

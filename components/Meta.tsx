@@ -1,11 +1,6 @@
 // Components
 import Head from "next/head";
 
-// Constants
-import { CMS_NAME, HOME_OG_IMAGE_URL } from "lib/constants";
-
-// TODO: fix meta
-
 const Meta = () => {
   return (
     <Head>
@@ -32,15 +27,16 @@ const Meta = () => {
         href="/favicon/safari-pinned-tab.svg"
         color="#000000"
       />
+      <meta name="msapplication-TileColor" content="#2b5797" />
+      <meta name="theme-color" content="#ffffff" />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <link rel="shortcut icon" href="/favicon/favicon.ico" />
       <meta name="msapplication-TileColor" content="#000000" />
       <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
       <meta
         name="description"
-        content={`A statically generated blog example using Next.js and ${CMS_NAME}.`}
+        content={`Hi, I'm Alexandre BERNARD a developer, wannabe mountainer and curious minded guy. Come and learn more about my work and excursions`}
       />
-      <meta property="og:image" content={HOME_OG_IMAGE_URL} />
       {/** Theme configuration */}
       <meta name="theme-color" content="#000" />
     </Head>

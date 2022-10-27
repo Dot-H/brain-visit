@@ -2,7 +2,7 @@ import Head from "next/head";
 
 // Components
 import Container from "components/container";
-import Layout from "components/Layout";
+import Page from "components/Page";
 import Nav from "components/Nav";
 import PostCard from "components/PostCard";
 
@@ -20,7 +20,7 @@ type IndexProps = {
 
 export default function Index({ posts, category }: IndexProps) {
   return (
-    <Layout>
+    <Page>
       <Head>
         <title key={"title"}>{`Alb's blog - ${category}`}</title>
       </Head>
@@ -36,7 +36,7 @@ export default function Index({ posts, category }: IndexProps) {
           ))}
         </section>
       </Container>
-    </Layout>
+    </Page>
   );
 }
 

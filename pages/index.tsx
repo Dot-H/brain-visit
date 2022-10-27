@@ -4,7 +4,7 @@ import Image from "next/future/image";
 import AboutMe from "components/AboutMe";
 import Container from "components/container";
 import Intro from "components/Intro";
-import Layout from "components/Layout";
+import Page from "components/Page";
 import Nav from "components/Nav";
 import Section from "components/ArticleSection";
 
@@ -24,7 +24,7 @@ import ZeroConfigQlCover from "public/assets/blog/posts/zero-configuration-ql/co
 
 export default function Index() {
   return (
-    <Layout>
+    <Page>
       <Head>
         <title>Alexandre Bernard&apos;s website</title>
       </Head>
@@ -53,7 +53,7 @@ export default function Index() {
         </section>
       </Container>
       <MountainsBackgroud />
-    </Layout>
+    </Page>
   );
 }
 
