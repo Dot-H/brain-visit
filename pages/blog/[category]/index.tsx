@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 
 // Components
 import Container from "components/container";
@@ -8,13 +7,14 @@ import Nav from "components/Nav";
 import PostCard from "components/PostCard";
 
 // Libs
-import * as post from "lib/posts";
+import { getPostsMatching, CATEGORY_VALUES } from "lib/posts";
 
 // Types
+import type { Post, PostCategory } from "lib/posts";
 import type { GetStaticProps } from "next";
 
 type IndexProps = {
-  posts: ReadonlyArray<post.Post>;
+  posts: ReadonlyArray<Post>;
   category: string;
 };
 
@@ -42,9 +42,9 @@ export default function Index({ posts, category }: IndexProps) {
 
 export const getStaticProps: GetStaticProps<
   IndexProps,
-  { category: post.PostCategory }
+  { category: PostCategory }
 > = async ({ params }) => {
-  const posts = await post.getPostsMatching(
+  const posts = await getPostsMatching(
     (p) => p.metadata.category === params.category
   );
 
@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps<
 
 export async function getStaticPaths() {
   return {
-    paths: Object.values(post.PostCategory).map((category) => ({
+    paths: Array.from(CATEGORY_VALUES.keys()).map((category) => ({
       params: {
         category,
       },

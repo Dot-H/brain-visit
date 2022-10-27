@@ -68,7 +68,7 @@ export enum PostCategory {
   ENGINEERING = "engineering",
   EXCURSIONS = "excursions",
 }
-const CATEGORY_VALUES = new Set(Object.values(PostCategory));
+export const CATEGORY_VALUES = new Set(Object.values(PostCategory));
 
 /** Valid value as a {@link Post}'s tag */
 export enum PostTag {
@@ -80,7 +80,7 @@ export enum PostTag {
   OUTDOOR = "outdoor",
   PERFORMANCE = "performance",
 }
-const TAG_VALUES = new Set(Object.values(PostTag));
+export const TAG_VALUES = new Set(Object.values(PostTag));
 
 /**
  * @returns The slug of all the available posts
