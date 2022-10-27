@@ -12,18 +12,31 @@ import { getPostsMatching, CATEGORY_VALUES } from "lib/posts";
 // Types
 import type { Post, PostCategory } from "lib/posts";
 import type { GetStaticProps } from "next";
+import { useRouter } from "next/router";
 
 type IndexProps = {
   posts: ReadonlyArray<Post>;
-  category: string;
+  category: PostCategory;
+  buildTime: Readonly<string>;
 };
 
-export default function Index({ posts, category }: IndexProps) {
+export default function Index({ posts, category, buildTime }: IndexProps) {
+  const router = useRouter();
+
   return (
-    <Page>
-      <Head>
-        <title key={"title"}>{`Alb's blog - ${category}`}</title>
-      </Head>
+    <Page
+      type="WebSite"
+      buildTime={buildTime}
+      seo={{
+        title: `Alb's blog - ${category}`,
+        description:
+          category === ("ENGINEERING" as PostCategory)
+            ? "All the articles about my engineering work"
+            : "All the articles about my different outdoor excursions and experiences",
+        image: "https://brain-visit-dot-h.vercel.app/favicon/favicon-32x32.png", // FIXME: vercel/og
+        url: router.asPath,
+      }}
+    >
       <Container>
         <Nav />
         <section className="my-12 lg:my-24 grid content-center gap-12 md:gap-6 xl:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center">
@@ -49,7 +62,11 @@ export const getStaticProps: GetStaticProps<
   );
 
   return {
-    props: { posts, category: params.category },
+    props: {
+      posts,
+      category: params.category,
+      buildTime: new Date().toISOString().split("T")[0],
+    },
   };
 };
 

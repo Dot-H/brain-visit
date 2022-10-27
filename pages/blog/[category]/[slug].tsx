@@ -36,7 +36,16 @@ export default function CategoryPostList({
   }
 
   return (
-    <Page>
+    <Page
+      type="BlogPosting"
+      buildTime={p.metadata.releaseDate}
+      seo={{
+        title: p.metadata.title,
+        description: p.metadata.description,
+        image: `${process.env.NEXT_PUBLIC_WEBSITE_URL}${p.cover.srcURL}`,
+        url: router.asPath,
+      }}
+    >
       <Container>
         <Nav />
         {router.isFallback ? (

@@ -60,6 +60,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["remark", "npm:14.0.2"],\
             ["remark-html", "npm:15.0.1"],\
             ["remark-prism", "npm:1.3.6"],\
+            ["schema-dts", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:1.1.0"],\
             ["sharp", "npm:0.31.1"],\
             ["tailwindcss", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:3.2.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"]\
@@ -2732,6 +2733,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["remark", "npm:14.0.2"],\
             ["remark-html", "npm:15.0.1"],\
             ["remark-prism", "npm:1.3.6"],\
+            ["schema-dts", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:1.1.0"],\
             ["sharp", "npm:0.31.1"],\
             ["tailwindcss", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:3.2.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"]\
@@ -8831,6 +8833,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["scheduler", "npm:0.23.0"],\
             ["loose-envify", "npm:1.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["schema-dts", [\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/schema-dts-npm-1.1.0-b7373e8fa2-546af6d870.zip/node_modules/schema-dts/",\
+          "packageDependencies": [\
+            ["schema-dts", "npm:1.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:1.1.0", {\
+          "packageLocation": "./.yarn/__virtual__/schema-dts-virtual-55c8e3d8c5/0/cache/schema-dts-npm-1.1.0-b7373e8fa2-546af6d870.zip/node_modules/schema-dts/",\
+          "packageDependencies": [\
+            ["schema-dts", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:1.1.0"],\
+            ["@types/typescript", null],\
+            ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"]\
+          ],\
+          "packagePeers": [\
+            "@types/typescript",\
+            "typescript"\
           ],\
           "linkType": "HARD"\
         }]\

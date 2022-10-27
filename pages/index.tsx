@@ -22,11 +22,32 @@ import StartupStagingEnvCover from "public/assets/blog/posts/startup-staging-env
 import UCPAAlpinismCover from "public/assets/blog/posts/ucpa-alpinism/cover.webp";
 import ZeroConfigQlCover from "public/assets/blog/posts/zero-configuration-ql/cover.webp";
 
-export default function Index() {
+// Constants
+import { DEFAULT_SITE_METADATA } from "lib/seo";
+
+// Types
+import type { GetStaticProps } from "next";
+
+type IndexProps = {
+  buildTime: Readonly<string>;
+};
+
+export default function Index({ buildTime }: IndexProps) {
   return (
-    <Page>
+    <Page
+      type="WebSite"
+      buildTime={buildTime}
+      seo={{
+        title: "Alexandre Bernard's website",
+        description: DEFAULT_SITE_METADATA.defaultDescription,
+        image: "https://brain-visit-dot-h.vercel.app/favicon/favicon-32x32.png", // FIXME: vercel/og
+        url:
+          process.env.NEXT_PUBLIC_WEBSITE_URL +
+          DEFAULT_SITE_METADATA.pathPrefix,
+      }}
+    >
       <Head>
-        <title>Alexandre Bernard&apos;s website</title>
+        <title></title>
       </Head>
       <Container>
         <Nav />
@@ -120,3 +141,9 @@ const OverlappingCardsExcursions = () => (
     </div>
   </div>
 );
+
+export const getStaticProps: GetStaticProps<IndexProps> = () => ({
+  props: {
+    buildTime: new Date().toISOString().split("T")[0],
+  },
+});
