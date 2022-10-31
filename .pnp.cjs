@@ -40,6 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.11.7"],\
             ["@types/react", "npm:18.0.23"],\
             ["@types/react-dom", "npm:18.0.7"],\
+            ["@vercel/og", "npm:0.0.20"],\
             ["autoprefixer", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:10.4.12"],\
             ["classnames", "npm:2.3.2"],\
             ["date-fns", "npm:2.29.3"],\
@@ -1485,11 +1486,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@resvg/resvg-wasm", [\
+        ["npm:2.0.0-alpha.4", {\
+          "packageLocation": "./.yarn/cache/@resvg-resvg-wasm-npm-2.0.0-alpha.4-e8c7fbf697-fa2d470d6f.zip/node_modules/@resvg/resvg-wasm/",\
+          "packageDependencies": [\
+            ["@resvg/resvg-wasm", "npm:2.0.0-alpha.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@rushstack/eslint-patch", [\
         ["npm:1.2.0", {\
           "packageLocation": "./.yarn/cache/@rushstack-eslint-patch-npm-1.2.0-917f402e4e-faa749faae.zip/node_modules/@rushstack/eslint-patch/",\
           "packageDependencies": [\
             ["@rushstack/eslint-patch", "npm:1.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@shuding/opentype.js", [\
+        ["npm:1.4.0-beta.0", {\
+          "packageLocation": "./.yarn/cache/@shuding-opentype.js-npm-1.4.0-beta.0-498d62cde8-af3478c40c.zip/node_modules/@shuding/opentype.js/",\
+          "packageDependencies": [\
+            ["@shuding/opentype.js", "npm:1.4.0-beta.0"],\
+            ["fflate", "npm:0.7.4"],\
+            ["string.prototype.codepointat", "npm:0.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1982,6 +2003,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/yoga-layout", [\
+        ["npm:1.9.2", {\
+          "packageLocation": "./.yarn/cache/@types-yoga-layout-npm-1.9.2-3c692aa211-dbc3d6ab99.zip/node_modules/@types/yoga-layout/",\
+          "packageDependencies": [\
+            ["@types/yoga-layout", "npm:1.9.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@typescript-eslint/parser", [\
         ["npm:5.41.0", {\
           "packageLocation": "./.yarn/cache/@typescript-eslint-parser-npm-5.41.0-cf0f0c7317-ae005b6032.zip/node_modules/@typescript-eslint/parser/",\
@@ -2068,6 +2098,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/visitor-keys", "npm:5.41.0"],\
             ["@typescript-eslint/types", "npm:5.41.0"],\
             ["eslint-visitor-keys", "npm:3.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@vercel/og", [\
+        ["npm:0.0.20", {\
+          "packageLocation": "./.yarn/cache/@vercel-og-npm-0.0.20-e1fe5915bb-dfce1cd47b.zip/node_modules/@vercel/og/",\
+          "packageDependencies": [\
+            ["@vercel/og", "npm:0.0.20"],\
+            ["@resvg/resvg-wasm", "npm:2.0.0-alpha.4"],\
+            ["satori", "npm:0.0.43"],\
+            ["yoga-wasm-web", "npm:0.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2713,6 +2755,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.11.7"],\
             ["@types/react", "npm:18.0.23"],\
             ["@types/react-dom", "npm:18.0.7"],\
+            ["@vercel/og", "npm:0.0.20"],\
             ["autoprefixer", "virtual:4b4ea5fbdba3bbb7670bc8e0680ac325be75e6eaae08c9698f2b7b1b8ab4ec9e3b00d36dd7891edcedb5d3d6dc14973ddf07d07f26f3879643f1719dc359b3ac#npm:10.4.12"],\
             ["classnames", "npm:2.3.2"],\
             ["date-fns", "npm:2.29.3"],\
@@ -2899,6 +2942,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/camelcase-css-npm-2.0.1-90d1b6df08-1cec2b3b3d.zip/node_modules/camelcase-css/",\
           "packageDependencies": [\
             ["camelcase-css", "npm:2.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["camelize", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/camelize-npm-1.0.1-d86ebe085a-91d8611d09.zip/node_modules/camelize/",\
+          "packageDependencies": [\
+            ["camelize", "npm:1.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3245,6 +3297,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["css-background-parser", [\
+        ["npm:0.1.0", {\
+          "packageLocation": "./.yarn/cache/css-background-parser-npm-0.1.0-d1e94221f7-cf53bef8d5.zip/node_modules/css-background-parser/",\
+          "packageDependencies": [\
+            ["css-background-parser", "npm:0.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["css-box-shadow", [\
+        ["npm:1.0.0-3", {\
+          "packageLocation": "./.yarn/cache/css-box-shadow-npm-1.0.0-3-2a025ab419-1b7f15b291.zip/node_modules/css-box-shadow/",\
+          "packageDependencies": [\
+            ["css-box-shadow", "npm:1.0.0-3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["css-color-keywords", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/css-color-keywords-npm-1.0.0-fc176df58b-8f125e3ad4.zip/node_modules/css-color-keywords/",\
+          "packageDependencies": [\
+            ["css-color-keywords", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["css-mediaquery", [\
         ["npm:0.1.2", {\
           "packageLocation": "./.yarn/cache/css-mediaquery-npm-0.1.2-39b61fbcad-8e26ae52d8.zip/node_modules/css-mediaquery/",\
@@ -3259,6 +3338,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/css-selector-parser-npm-1.4.1-b8c642c4c5-31948754e5.zip/node_modules/css-selector-parser/",\
           "packageDependencies": [\
             ["css-selector-parser", "npm:1.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["css-to-react-native", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/css-to-react-native-npm-3.0.0-ab07d67d74-98a2e9d4fb.zip/node_modules/css-to-react-native/",\
+          "packageDependencies": [\
+            ["css-to-react-native", "npm:3.0.0"],\
+            ["camelize", "npm:1.0.1"],\
+            ["css-color-keywords", "npm:1.0.0"],\
+            ["postcss-value-parser", "npm:4.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3781,6 +3872,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["emoji-regex", [\
+        ["npm:10.2.1", {\
+          "packageLocation": "./.yarn/cache/emoji-regex-npm-10.2.1-463e5e2567-1aa2d16881.zip/node_modules/emoji-regex/",\
+          "packageDependencies": [\
+            ["emoji-regex", "npm:10.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:8.0.0", {\
           "packageLocation": "./.yarn/cache/emoji-regex-npm-8.0.0-213764015c-d4c5c39d5a.zip/node_modules/emoji-regex/",\
           "packageDependencies": [\
@@ -4521,6 +4619,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["fd-slicer", "npm:1.1.0"],\
             ["pend", "npm:1.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["fflate", [\
+        ["npm:0.7.4", {\
+          "packageLocation": "./.yarn/cache/fflate-npm-0.7.4-df9245ab05-b812ab2604.zip/node_modules/fflate/",\
+          "packageDependencies": [\
+            ["fflate", "npm:0.7.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8809,6 +8916,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["satori", [\
+        ["npm:0.0.43", {\
+          "packageLocation": "./.yarn/cache/satori-npm-0.0.43-3844fad03b-1bfaf87de5.zip/node_modules/satori/",\
+          "packageDependencies": [\
+            ["satori", "npm:0.0.43"],\
+            ["@shuding/opentype.js", "npm:1.4.0-beta.0"],\
+            ["css-background-parser", "npm:0.1.0"],\
+            ["css-box-shadow", "npm:1.0.0-3"],\
+            ["css-to-react-native", "npm:3.0.0"],\
+            ["emoji-regex", "npm:10.2.1"],\
+            ["postcss-value-parser", "npm:4.2.0"],\
+            ["yoga-layout-prebuilt", "npm:1.10.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["saxes", [\
         ["npm:5.0.1", {\
           "packageLocation": "./.yarn/cache/saxes-npm-5.0.1-57abf031ae-5636b55cf1.zip/node_modules/saxes/",\
@@ -9140,6 +9263,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emoji-regex", "npm:8.0.0"],\
             ["is-fullwidth-code-point", "npm:3.0.0"],\
             ["strip-ansi", "npm:6.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["string.prototype.codepointat", [\
+        ["npm:0.2.1", {\
+          "packageLocation": "./.yarn/cache/string.prototype.codepointat-npm-0.2.1-82003deaf5-bafa15844d.zip/node_modules/string.prototype.codepointat/",\
+          "packageDependencies": [\
+            ["string.prototype.codepointat", "npm:0.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10418,6 +10550,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/yocto-queue-npm-0.1.0-c6c9a7db29-f77b3d8d00.zip/node_modules/yocto-queue/",\
           "packageDependencies": [\
             ["yocto-queue", "npm:0.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["yoga-layout-prebuilt", [\
+        ["npm:1.10.0", {\
+          "packageLocation": "./.yarn/cache/yoga-layout-prebuilt-npm-1.10.0-855b15449f-6954c7c7b0.zip/node_modules/yoga-layout-prebuilt/",\
+          "packageDependencies": [\
+            ["yoga-layout-prebuilt", "npm:1.10.0"],\
+            ["@types/yoga-layout", "npm:1.9.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["yoga-wasm-web", [\
+        ["npm:0.1.2", {\
+          "packageLocation": "./.yarn/cache/yoga-wasm-web-npm-0.1.2-becc1bcc71-0e7fa70efe.zip/node_modules/yoga-wasm-web/",\
+          "packageDependencies": [\
+            ["yoga-wasm-web", "npm:0.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\

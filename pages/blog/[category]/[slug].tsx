@@ -42,7 +42,7 @@ export default function CategoryPostList({
       seo={{
         title: p.metadata.title,
         description: p.metadata.description,
-        image: `${process.env.NEXT_PUBLIC_WEBSITE_URL}${p.cover.srcURL}`,
+        image: p.ogImageURL,
         url: router.asPath,
       }}
     >
@@ -53,11 +53,6 @@ export default function CategoryPostList({
         ) : (
           <>
             <article className="mt-16 mb-32 mx-2">
-              <Head>
-                <title key={"title"}>{p.metadata.title}</title>
-                {/** TODO: og:image */}
-                <meta property="og:image" content={"FIXME"} />
-              </Head>
               <PostHeader post={p} />
               <PostBody htmlContent={p.content} />
             </article>

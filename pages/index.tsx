@@ -40,7 +40,7 @@ export default function Index({ buildTime }: IndexProps) {
       seo={{
         title: "Alexandre Bernard's website",
         description: DEFAULT_SITE_METADATA.defaultDescription,
-        image: "https://brain-visit-dot-h.vercel.app/favicon/favicon-32x32.png", // FIXME: vercel/og
+        image: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/og`,
         url:
           process.env.NEXT_PUBLIC_WEBSITE_URL +
           DEFAULT_SITE_METADATA.pathPrefix,

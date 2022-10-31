@@ -33,7 +33,7 @@ export default function Index({ posts, category, buildTime }: IndexProps) {
           category === ("ENGINEERING" as PostCategory)
             ? "All the articles about my engineering work"
             : "All the articles about my different outdoor excursions and experiences",
-        image: "https://brain-visit-dot-h.vercel.app/favicon/favicon-32x32.png", // FIXME: vercel/og
+        image: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/og`,
         url: router.asPath,
       }}
     >
