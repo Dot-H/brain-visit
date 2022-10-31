@@ -1,55 +1,57 @@
 ---
 releaseDate: "2021-03-22"
-title: "Optimisation de conversion SQL vers JSON"
+title: "Efficiently converting SQL results to JSON"
 category: "engineering"
 tags: ["golang", "performance"]
-description: "Cet article présente un algorithme performant permettant la transformation d'un résultat SQL sous forme de tableau à sa représentation JSON sous forme d'arbre"
+description: "SQL databases stream their result as tables of data. Let's see how we can implement an efficient algorithm to transform this stream into a JSON representation"
 ---
 
-Toute la technologie des [consentements eKee](/blog/gestion-de-consentements) consiste à être capable de partager des sous ensembles de données avec une granulartié infinie tout en laissant la requête dicter la structure. En bref, utiliser un langage de requêtage zero config.
+The technology behind the [eKee consents](https://www.ekee.io/blog/gestion-de-consentements) permits to share a subset of data with an infinit granularity and let the request dictate the final structure. In short, provide a zero config query language.
 
-Ce qui signifie qu'eKee est constamment en train de compiler une requête JSON vers du SQL puis de re-traduire le résultat SQL vers la structure JSON. Or cette opération doit se faire en temps réel, rendant ses performances critiques.
+What this means is that eKee is constantly transpiling a JSON request into a SQL one and then converting back the SQL result to a JSON representation. Issue being that
+this operation is done in realtime, making it performance critical.
 
-Récemment, nous avons été confronté à un problème lors du passage _Résultat SQL_ vers _JSON_ : À partir d'environ 50Mo de donnée, la réponse pouvait mettre plus de 30 secondes à arriver.
+For a while, we had a naive implementation working just fine. But with the users having more and more data saved, we detected that when the result started to get big (~50MB), the server could take up to 30s to respond.
 
-Dans cet article, nous allons vous présenter comment un changement d'algorithme a pu nous faire passer de 30s de traitement à moins de 200ms.
+In this article I'll explain how a new algorithm, building the resulting tree along the stream, permitted to reduce this response time from 30s to 200ms at worst.
 
-## La problématique
+## The issue
 
-Le but de la transformation est de reconstruire des objets JSON à partir des résultats d'une requête SQL. Dans notre syntaxe, un objet JSON représente une entrée d'une table. Tous ses champs représentent soit des colonnes, soit des entrées de table en relation avec l'objet (la nouvelle table est un sous-objet)
+The goal is to build a JSON object from the results of a SQL request. In our syntax, a JSON object represents an entry in a table and all its fields are the columns of the table plus subobjects if the table have references to other tables.
 
-![Transformation d'un résultat attendu](/assets/blog/posts/sql-to-json/json-sql.jpg)
+![The SQL result and its transformation to a JSON object](/assets/blog/posts/sql-to-json/json-sql.jpg)
 
 <center style="margin-top: -12px">
-  <i>Fig 1: Transformation en résultat attendu</i>
+  <i>Fig 1: The SQL result and its transformation to a JSON object</i>
 </center>
 
-Deux problématiques majeures sont rencontrées durant la transformation de résultats SQL en JSON :
+There is two major issues when transforming SQL results to JSON:
 
-- Atomicité d'une entrée: les colonnes d'une même entrée ne doivent pas être séparées entre plusieurs objets. Une ligne du résultat doit être découpée en groupes de colonnes en fonction de l'entrée à laquelle chaque colonne appartient. Les colonnes d'un groupe sont considérées comme un seul élément pendant les opérations de comparaison (_country_, _city_, _street_ dans fig. 1) ;
-- Fusion des entrées identiques: Comme pour _country.city_ et _country.city.street_ (fig. 1), quand plusieurs éléments d'une relation entre deux tables **A** et **B** existent (i.e. one-to-many), une ligne SQL est renvoyée par élements de **B** sélectionnés. L'entrée de **A** est alors présente dans chacune des lignes mais ne doit apparaitre qu'une fois dans le résultat final. Tandis que les entrées de **B** doivent être fusionnée dans un tableau.
+- **Objects unicity**: The result from a SQL request can be seen as a 2D representation. There is no depth. Therefore, we need to remap all the columns in the resulting row to their corresponding object and then be able to understand the relation between each objects before adding the depth dimension (In Fig.1 we would have three kind of objects: _country_, _city_, _street_);
+- **Merging identical entries**: As for _country.city_ and _country.city.street_ (Fig.1), when multiple elements are present for a similar relation between two tables **A** and **B** (i.e. one-to-many), a row is returned for each element from **B**. Issue being that each of those rows will have similar columns for the related entry **A**. Even though the resulting object must have only one occurrence of **A** and an array of **B**.
 
-## Génération et fusion d'arbre
+## The naive approach: building and merging trees
 
-Une première approche est de traiter ces points les uns après les autres. En commençant par construire une arborescence d'objet JSON pour chaque ligne du résultat puis en fusionnant les arborescences entre elles.
+A naive approach to the problem would be to handle each issue one after the other. First you build a tree per row and then you merge all those trees together one after the other.
 
-L'avantage de cette solution est sa simplicité, un algorithme récursif parcourant les arborescences permet de réduire le problème à la fusion d'un seul noeud de l'arbre. Il suffit alors de détecter les conflits de valeur entre deux objets et de définir une méthode de résolution de ces conflits (i.e. génération de tableaux contenant les deux valeurs).
+Since each tree have the same structure, the main advantage of this solution is its simplicity. The algorithm takes each tree one after the other and merge it into the result from the previous merge. When comparing, if the nodes are exactly the sames, you keep the current occurrence (_city_ nodes in Fig.1). But if some of their fields missmatch, you create a branching at the level of the missmatching nodes: an array (_street_ nodes in Fig.1).
 
-Mais, cette solution implique de construire un nombre incalculable d'objets intermédiaires qui seront supprimés pendant la fusion. Cette utilisation de la mémoire est très néfaste aux performances d'un programme écrit en go. Go reposant sur un garbage collector, allouer puis libérer des objets en grande quantité force le garbage collector à faire des poses plus longues et plus fréquentes.
+But this solution is memory expensive. You build tons of intermediate objects which are just going to be released during the merge. In a programming language with a garbage collector such as Go, this impacts the performance _a lot_. You are allocating and releasing quantity of objects, forcing the garbage collector to do frequent and long stops.
 
-De plus, même si l'algorithme récursif est assez simple, son optimisation est limitée. Chaque fois qu'une arborescence est fusionnée avec le résultat, une détection de conflit doit être faite entre chaque noeud des deux arborescences. Ainsi, si un conflit génère un branchement dans l'arbre (un tableau), les futures comparaisons doivent être faites avec les deux branches de l'arbre.
+Moreover, the number of comparaison to do keeps increasing every time you add a new branching into the resulting tree. Meaning that this solution starts showing its limits
+when the resulting JSON object has multiple arrays.
 
-Cette solution a rapidement montré ses limites lors du traitement de résultat contenant de nombreux tableaux. Transformer plusieurs dixaines de Mo de lignes SQL peut prendre bien plus de 30 secondes. Il nous a donc fallut trouver une autre approche.
+## A more linear approach
 
-## Vers un processus plus linéaire
+The previous algorithm was spending most of its time into the walkthrough and the comparaison of the objects built from the resulting SQL rows. Therefore, the goal of the new approach is to avoid walking through the resulting JSON object and find an efficient way to compare objects.
 
-L'algorithme précédent passait la quasi totalité de son temps sur le parcours et la comparaison des objets issus des lignes SQL. Toute la problématique est donc de réussir à supprimer les parcours du JSON final et limiter au maximum la comparaison nécessaire lors de l'ajout d'éléments.
+The new solution consists of building all the objects first before linking them to their parent. No more walking through a tree. But in order to be able to compare the
+objects without a walkthrough we need to be able to hash them. This solution is only applicable if the objects to compare have the same structure. That's a piece of luck, in a SQL response each resulting row has the same columns in the same order.
 
-La nouvelle solution explorée consiste à construire tous les objets dans un premier temps puis à les rattacher à leur parent. Plus aucun parcours d'arborescence n'est nécessaire. Par contre, cette solution repose sur la génération de clefs d'identification uniques pour chaque objet JSON. Cette solution n'est applicable que si les différents objets à fusionner sont constitués des mêmes colonnes. Dans le cas d'une réponse SQL, l'ensemble et l'ordre des colonnes sont fixés pour toutes les lignes résultantes. La deuxième solution est donc applicable.
+The whole process is carried out in three passes: First, we build the objects and their hash. Then we walk through the hashes to delete the duplicates and register the
+different relations between objects. Finally we link the objects between them using the relations found in the latter pass.
 
-L'ensemble du processus est réalisé en trois passages. Le premier construit les objets et leurs identifiants. Le deuxième itère sur les identifiants pour supprimer les duplicatas et enregistre les liens entre les objets (au moyen de leurs identifiants). Le dernier relie les objets finaux grâce aux métadonnées générées pendant la deuxième étape.
-
-### Construction des objets et de leur identifiant
+### Building the objects and their hash
 
 ```go {numberLines}
 type Route = string
@@ -78,19 +80,19 @@ for col, value := range SQLrows {
 
 ```
 
-Pour rendre la construction du JSON réalisable, toutes les colonnes de la requête SQL ont été préalablement remplacées par un chemin vers l'endroit où les valeurs devront être utilisées dans le JSON final. Il est ainsi possible de tracer la position d'un champ mais également celle de l'objet possédant le champ, son objet parent, etc. Par contre le nombre de colonnes dans chaque objet est inconnu avant la fin du traitement. Les identifiants des objets générés pour une ligne ne peuvent être utilisés qu'après le traitement de toutes les colonnes de la ligne.
+To make the construction of the JSON feasible, all the columns in the SQL query have been previously replaced by a path to the place where the values should be put in the final JSON. It is thus possible to track the position of a field but also that of the object that owns the field, the parent object, etc. However, the number of columns in each object is unknown before the end of the processing. The identifiers of the objects generated for a row can only be used after the processing of all the columns of the row.
 
-![Découpe d'une ligne en objets](/assets/blog/posts/sql-to-json/sql-to-object.jpg)
+![Cutting a line into objects](/assets/blog/posts/sql-to-json/sql-to-object.jpg)
 
 <center style="margin-top: -12px">
-  <i>Découpe d'une ligne en objets</i>
+  <i>Cutting a line into objects</i>
 </center>
 
-L'identifiant d'un objet est enrichi au fur et à mesure que des colonnes lui sont ajoutées. Les noms des champs sont omis durant la génération de l'identifiant pour limiter la taille de la donnée à traiter. L'association du chemin menant à l'objet et à ses valeurs garantit que deux objets provenant de tables différentes ne peuvent pas être confondus même s'ils sont constitués des mêmes valeurs.
+The identifier of an object is enriched as columns are added to it. Field names are omitted during the generation of the identifier to limit the size of the data to process. The coupling of the path leading to the object to its values ensures that two objects from different tables cannot be confused. Even if they are made up of the same values.
 
-Comme certaines tables n'ont pas forcément de colonne sélectionnée, les appels à _AddKeyToObject_ vont garantir que tous les objets sur la route du champ sont créés. Dans notre exemple (country.city.street.name), ajouter le champ _name_ va créer des objets vides pour les routes _country.city_ et _country_ en plus d'ajouter un champ _name_ à l'objet _country.city.street_
+Since some tables may not have selected columns, calls to _AddKeyToObject_ will ensure that all objects present in the field's route are created. In our example (country.city.street.name), adding the _name_ field will create empty objects for the _country.city_ and _country_ routes in addition to adding a _name_ field to the _country.city.street_ object
 
-### Suppression des duplicatas et création des liens entre les objets
+### Deleting duplicates and finding the relations between objects
 
 ```go {numberLines}
 type AllElements = map[TableName]HashList
@@ -121,9 +123,9 @@ for objRoute, obj := range objects {
 
 ```
 
-Le point important de cette deuxième étape est la manière dont est gérée la table de hash. L'ordre d'arrivée des éléments doit être conservé pour que, en cas d'utilisation de **ORDER BY** dans la requête SQL, l'ordre des éléments dans le JSON soient bien triés. Les objets sont groupés en fonction de leur _parentHash_ et _parentTable_ puis l'ordre d'arrivée est utilisé. Le _hash_ est donc uniquement utilisé pour vérifier l'égalité entre deux objets.
+An important point of this second step is how the hash table is handled. The order of arrival of the elements must be preserved so that, if **ORDER BY** is used in the SQL query, the order of the elements in the JSON are well sorted. The objects are grouped according to their _parentHash_ and _parentTable_ and then the arrival order is used. The _hash_ is therefore only used to check the equality between two objects.
 
-### Construction de la représentation final
+### Building the final JSON representation
 
 ```go {numberLines}
 type ObjectsMap = map[Route][Hash]Object
@@ -154,25 +156,25 @@ for _, res := range ObjectMap[""] {
 return []Object{}
 ```
 
-_ObjectsMap_ contient tous les objets JSON générés et _AllElements_ les liens entre ces objets. Pendant cette dernière étape, il ne reste plus de calculs ou d'algorithmes complexes à appliquer. L'insertion des nouveaux éléments est peu intéressante mais néanmoins verbeuse, c'est pourquoi le code d'insertion est omis. Il faut créer ou non des tableaux si un élément est déjà présent dans le champ _tableName_.
+_ObjectsMap_ contains all the generated JSON objects and _AllElements_ the links between these objects. During this last step, there are no more complex calculations or algorithms to apply. Inserting the new elements is not super interessting but nonetheless verbose, which is why the insertion code is omitted. Arrays should be created if an element is already present in the _tableName_ field.
 
-![Liaisons entre les objets finaux](/assets/blog/posts/sql-to-json/object-links.jpg)
+![Links between end objects](/assets/blog/posts/sql-to-json/object-links.jpg)
 
 <center style="margin-top: -12px">
-  <i>Liaisons entre les objets finaux</i>
+  <i>Links between end objects</i>
 </center>
 
-Dans l'exemple ci-dessus, deux objets differents vont être raccrochés à un même objet parent en utilisant le champ _street_. Un tableau va permettre de conserver les deux objets.
+In the example above, two different objects will be connected to the same parent object using the _street_ field. An array will be used to keep both objects.
 
 ## Résultats
 
-Passer de la première solution à la seconde nous a permis de considérablement réduire le temps d'exécution de certaines de nos requêtes. Précédemment, le traitement d'environ 50Mo de résultat SQL pouvait prendre plus de 30 secondes. Désormais, ce même traitement s'exécute constamment en moins de 200 millisecondes.
+Switching from the first to the second solution allowed us to significantly reduce the execution time of some of our queries. Previously, processing about 50MB of SQL results could take over 30 seconds. Now, this same processing consistently takes less than 200 milliseconds.
 
-Pour autant, l'implémentation présentée aujourd'hui reste naïve et largement optimisable. Parmis les optimisations les plus impactantes on peut penser à :
+However, the implementation presented today remains naive and largely optimizable. Among the most impactful optimizations we can think of:
 
-- Utiliser une représentation plus compactes pour les hash,
-- Remplacer les _Map_ par des tableau afin de supprimer la génération des hash Go et profiter d'un stockage contigu en mémoire,
-- Utiliser des pools de mémoire lors de la création des objets,
-- Implémenter de la vectorisation lors des comparaisons
+- Use a more compact representation for the hashes,
+- Replace _Map_ by arrays in order to suppress the generation of Go hashes and take advantage of contiguous memory storage,
+- Use memory pools when creating objects,
+- Implement vectorization during comparisons
 
-Toutes ces optimisations et bien d'autres arriveront lorsque le besoin s'en fera sentir. Bien entendu, nous ne manquerons pas de vous les présenter ici !
+But as a wise man once said: _premature optimization is the root of all evil_! Therefore they will only be implemented when the need arises ;)
