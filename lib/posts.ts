@@ -33,6 +33,9 @@ export type Post = {
 
   /** Data about the cover image */
   cover: CoverProps;
+
+  /** Encoded url to retrieve the og image */
+  ogImageURL: string;
 };
 
 export type PostMetadata = {
@@ -112,7 +115,17 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     throw new Error(`error parsing ${slug}'s metadata: ${error}`);
   }
 
-  return { slug, content, metadata: data, cover: await coverPromise };
+  const ogURL = new URL(`${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/og`);
+  ogURL.searchParams.append("post_slug", slug);
+  ogURL.searchParams.append("post_title", data.title);
+
+  return {
+    slug,
+    content,
+    metadata: data,
+    cover: await coverPromise,
+    ogImageURL: ogURL.href,
+  };
 }
 
 export async function getPostsMatching(

@@ -4,7 +4,7 @@ import Image from "next/future/image";
 import AboutMe from "components/AboutMe";
 import Container from "components/container";
 import Intro from "components/Intro";
-import Layout from "components/Layout";
+import Page from "components/Page";
 import Nav from "components/Nav";
 import Section from "components/ArticleSection";
 
@@ -16,18 +16,36 @@ import React from "react";
 
 // Images
 import AiguillesRougesCover from "public/assets/blog/posts/aiguilles-rouges/cover.webp";
-import QueyrasCover from "public/assets/blog/posts/queyras/cover.jpg";
+import QueyrasCover from "public/assets/blog/posts/queyras/cover.webp";
 import SqlToJSONCover from "public/assets/blog/posts/sql-to-json/cover.webp";
 import StartupStagingEnvCover from "public/assets/blog/posts/startup-staging-env/cover.webp";
 import UCPAAlpinismCover from "public/assets/blog/posts/ucpa-alpinism/cover.webp";
 import ZeroConfigQlCover from "public/assets/blog/posts/zero-configuration-ql/cover.webp";
 
-export default function Index() {
+// Constants
+import { DEFAULT_SITE_METADATA } from "lib/seo";
+
+// Types
+import type { GetStaticProps } from "next";
+
+type IndexProps = {
+  buildTime: Readonly<string>;
+};
+
+export default function Index({ buildTime }: IndexProps) {
   return (
-    <Layout>
-      <Head>
-        <title>Alexandre Bernard&apos;s website</title>
-      </Head>
+    <Page
+      type="WebSite"
+      buildTime={buildTime}
+      seo={{
+        title: "Alexandre Bernard's website",
+        description: DEFAULT_SITE_METADATA.defaultDescription,
+        image: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/og`,
+        url:
+          process.env.NEXT_PUBLIC_WEBSITE_URL +
+          DEFAULT_SITE_METADATA.pathPrefix,
+      }}
+    >
       <Container>
         <Nav />
         <Intro />
@@ -53,7 +71,7 @@ export default function Index() {
         </section>
       </Container>
       <MountainsBackgroud />
-    </Layout>
+    </Page>
   );
 }
 
@@ -120,3 +138,9 @@ const OverlappingCardsExcursions = () => (
     </div>
   </div>
 );
+
+export const getStaticProps: GetStaticProps<IndexProps> = () => ({
+  props: {
+    buildTime: new Date().toISOString().split("T")[0],
+  },
+});

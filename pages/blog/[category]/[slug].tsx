@@ -2,7 +2,7 @@
 import Container from "components/container";
 import ErrorPage from "next/error";
 import Head from "next/head";
-import Layout from "components/Layout";
+import Page from "components/Page";
 import MorePosts from "components/MorePosts";
 import Nav from "components/Nav";
 import PostBody from "components/PostBody";
@@ -36,7 +36,16 @@ export default function CategoryPostList({
   }
 
   return (
-    <Layout>
+    <Page
+      type="BlogPosting"
+      buildTime={p.metadata.releaseDate}
+      seo={{
+        title: p.metadata.title,
+        description: p.metadata.description,
+        image: p.ogImageURL,
+        url: router.asPath,
+      }}
+    >
       <Container>
         <Nav />
         {router.isFallback ? (
@@ -44,11 +53,6 @@ export default function CategoryPostList({
         ) : (
           <>
             <article className="mt-16 mb-32 mx-2">
-              <Head>
-                <title key={"title"}>{p.metadata.title}</title>
-                {/** TODO: og:image */}
-                <meta property="og:image" content={"FIXME"} />
-              </Head>
               <PostHeader post={p} />
               <PostBody htmlContent={p.content} />
             </article>
@@ -60,7 +64,7 @@ export default function CategoryPostList({
           </>
         )}
       </Container>
-    </Layout>
+    </Page>
   );
 }
 
