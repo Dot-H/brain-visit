@@ -4,9 +4,9 @@ const Intro = () => {
       <h1 className="text-6xl leading-normal">
         Alexandre Bernard&apos;s website
       </h1>
-      <h4 className="mt-4 text-3xl text-secondary">
+      <p className="mt-4 text-3xl text-secondary">
         Developer, wannabe mountainer and curious minded guy
-      </h4>
+      </p>
     </section>
   );
 };

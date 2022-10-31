@@ -16,7 +16,7 @@ import React from "react";
 
 // Images
 import AiguillesRougesCover from "public/assets/blog/posts/aiguilles-rouges/cover.webp";
-import QueyrasCover from "public/assets/blog/posts/queyras/cover.jpg";
+import QueyrasCover from "public/assets/blog/posts/queyras/cover.webp";
 import SqlToJSONCover from "public/assets/blog/posts/sql-to-json/cover.webp";
 import StartupStagingEnvCover from "public/assets/blog/posts/startup-staging-env/cover.webp";
 import UCPAAlpinismCover from "public/assets/blog/posts/ucpa-alpinism/cover.webp";
@@ -46,9 +46,6 @@ export default function Index({ buildTime }: IndexProps) {
           DEFAULT_SITE_METADATA.pathPrefix,
       }}
     >
-      <Head>
-        <title></title>
-      </Head>
       <Container>
         <Nav />
         <Intro />

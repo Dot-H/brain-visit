@@ -67,6 +67,7 @@ const Meta = (props: MetaProps) => {
       <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
 
       {/** Title & Description */}
+      <title>{props.seo.title}</title>
       <meta name="image" content={props.seo.image} />
       <meta
         name="apple-mobile-web-app-title"
