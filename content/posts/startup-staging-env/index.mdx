@@ -6,147 +6,123 @@ tags: ["devops", "design"]
 description: "How to settup a simple staging environment based on a gitops approach coupled with a k8s infrastructure"
 ---
 
-La gestion de documents est bien souvent limitée à leur stockage. Quelle que soit la solution
-utilisée, il est toujours aussi compliqué de :
+_To illustrate this article, you can find the github repository
+[Dot-H/simple-staging-env-ex](https://github.com/Dot-H/simple-staging-env-ex)_
 
-- Classer et retrouver ses documents,
-- Être certain d'avoir la dernière version,
-- Les partager avec des personnes qui n'utilisent pas la même solution.
+At eKee, when the team and the number of users started growing, we had an issue.
+We wanted to test things out and propose different versions of the product to
+the users. Issue being we were a startup and duplicating the environment was way
+to expensive.
 
-Par ailleurs, la problématique de l'accès aux données essentielles contenues dans un document reste
-entière. Pour exemple, la récupération et l’exploitation des données contenues dans un fichier pdf
-sont loin d’être aisées et à la portée de tous.
+In this article, I'll shortly explain our backend architecture, the solution I
+went to, the tools used to develop it and its limitations.
 
-# Retrouvez simplement vos documents
+## The backend environment
 
-Avec eKee vous pouvez enregistrer vos documents avec les informations essentielles qui les décrivent
-et qui constitueront autant de critères pour les retrouver facilement :
+At eKee we had an **hybrid architecture**. Without the fancy words, it just means
+that our stateful services (_databases_, _knowledge base software_, _gitlab_...)
+were running on on-premise servers while the stateless services
+(_engine_, _api_, _websites_...) were running in a cloud infrastructure using
+kubernetes.
 
-- Nom,
-- Description,
-- Date réelle du document (date de facture, date du contrat, …),
-- Catégorie (Vente, Achat, Juridique, Banque, Administratif, …),
-- Type (Facture, Contrat, Pièces d’identité, Attestation, Statuts, RIB, PV …),
-- Émetteur du document,
-- Statut (Projet, Diffusion, Nouveau, Ancien …),
-- ...
+Everything was deployed using a gitops approach, taging a new version of a service
+would trigger a new deployment. In order to do so, we were using
+[**ansible**](https://docs.ansible.com/ansible/latest/index.html) for on-premise
+services and [**helm**](https://helm.sh/) coupled with
+[**argocd**](https://argo-cd.readthedocs.io/en/stable/) for the in-cloud services.
 
-De plus, grâce à la [gestion de contacts eKee](/blog/gestion-de-contacts), vous
-pourrez associer à chaque document un ou plusieurs contacts, ou encore un
-Groupe de contacts (Salariés, Clients, Fournisseurs, Famille, …). Tous vos
-documents sont ainsi :
+## The specification
 
-- Classés de façon pertinente,
-- Facile à retrouver,
-- Facile à identifier avec les documents du même type,
-- Associés simplement aux contacts concernés.
+Based on this environment, here is what I wanted to develop:
 
-Vous pourrez également, en un clic, retrouver tous les documents associés à un contact ou à un
-Groupe de contacts.
+- Expose a `staging.[service]` subdomain for each service which would resolve to
+  a specific version of this service;
+- The version of a service could be any of its branch on git. If I want to test
+  _feature-A_ on the _ekee-api_ service I would deploy the latest commit on branch
+  _feature-A_;
+- Each service in the staging environment can use a different branch. They can be
+  deployed independantly;
+- The staging environment relies as much as it can on the prod one, no extra
+  deployment needed;
+- Deployments must be **simple**. If the developers needs to do more than two
+  operations, they won't use it (we all know we are lazy kind of people).
 
-![Passeport avec ses données associées](./documents-list-display.png)
+Following this specification, here is the developer experience I wanted:
 
-<center style="margin-top: -12px">
-  <i>
-    La liste des documents eKee permet de rapidement filtrer les documents qui
-    vous intéressent
-  </i>
-</center>
-<br />
+1. **Developer A** develops a new interface to share documents. The branch
+   _doc-sharing-v2_ is created in the repository _ekee-dashboard_,
+1. After commiting some beautiful engineering, **Developer A** opens a pull
+   request and labels it _staging_,
+1. Once the CI returns no error, **Developer A** clicks _deploy_ in _argocd_,
+1. When the PR is closed and/or the label **staging** is removed, the resources
+   used by in the staging environment are released.
 
-# Partager ou récupérer des documents simplement
+## The implementation
 
-Oubliez la contrainte de la gestion des pièces jointes à un mail, tant pour
-l'émetteur que pour le destinataire.
+### Adding the workflow around the _staging_ label in github
 
-Avec les [consentements eKee](/blog/gestion-de-consentements), donner accès à
-un ou plusieurs documents à destination d’un contact ou d’un Groupe de contacts
-n’a jamais été aussi simple.
+To trigger special workflows upon specific events, github exposes a wonderful
+set of tools through what they call [github actions](https://docs.github.com/en/actions).
 
-Vous maîtrisez en permanence qui peut accéder à quels documents, et vous êtes
-ainsi certain que vos interlocuteurs pourront avoir accès à la dernière version
-de vos documents.
+Here is the action we need to tag the latest PR's commit when the _staging_ label
+is present and untag it when the PR is closed or unlabeled:
 
-Pour exemple :
+```yaml
+name: Staging environment management
+on:
+  pull_request:
+    types: [opened, closed, synchronize, reopened, labeled, unlabeled]
+jobs:
+  tag:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-ci') }}
+    name: Tag staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      # Retrieve the branch name
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
+        id: extract_branch
+      # Tag the current commit with `staging-BRANCH_NAME` when there is a `staging` label
+      - name: "Tag staging"
+        uses: eKee-io/git-tag-action@fix-not-a-git-dir
+        # Ensure that this step only runs if the staging label is present and the
+        # action is not "closed" nor "unlabeled"
+        if:
+          ${{ !contains(fromJson('["unlabeled", "closed"]'), github.event.action)
+          && contains(github.event.pull_request.labels.*.name, 'staging') }}
+        env:
+          TAG: staging-${{ steps.extract_branch.outputs.branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.extract_branch.outputs.branch }}
+      # Delete the `staging-BRANCH_NAME` tag if the PR is closed or unlabeled
+      - name: "Untag staging"
+        uses: eKee-io/git-tag-action@fix-not-a-git-dir
+        if: ${{ contains(github.event.action, 'closed') ||
+          (contains(github.event.action, 'unlabeled')
+          && !contains(github.event.pull_request.labels.*.name, 'staging')) }}
+        env:
+          TAG: staging-${{ steps.extract_branch.outputs.branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          DELETE: true
+```
 
-1. La société **A** créé un consentement donnant accès aux documents
-   qui possèdent les critères:
-   - Catégorie = “Vente”,
-   - Statut = “Diffusion“,
-   - Associés au Groupe de contacts “Clients”.
-2. Tous les documents destinés à ses clients leurs sont donc automatiquement
-   diffusés (Condition générales de vente, RIB, Attestation d’assurance, ….),
-3. Si **A** rajoute un nouveau document répondant à ces critères, tous ses
-   clients y auront automatiquement accès et recevront une notification. De
-   même, ajouter un contact au groupe “Client” permettra à ce dernier d'accéder
-   à ces mêmes documents.
+So basically everything it does is just managing the staging tag. And since our
+environment was already triggering an image building upon tagging event, the gitops
+part is already done!
 
-Plus puissant encore, le même consentement pourra permettre de diffuser les
-documents qui auront été spécifiquement associés à un contact du groupe.
+### Building the staging image to deploy
 
-- Les documents généraux associés au groupe “Clients” seront accessibles par tous les
-  contacts membres
-- Les documents spécifiquement associés à un contact appartenant à ce même groupe,
-  seront accessibles par ce seul contact.
+Nothing fancy here! What we deploy is a docker image so the strategy is pretty simple:
 
-Autres cas d’usage, on peut partager très simplement :
+1. Put a Dockerfile in the root directory of the services,
+1. Add an action triggered on tagging events building the docker image,
+1. Tag the docker image with the same tag as git,
+1. Push this image to your registry in order for it to be accessible by
+   your cloud resources.
 
-- Sa dernière pièce d’identité
-- Son dernier kBis
-- Ses derniers statuts
-- ...
-
-eKee donnera accès automatiquement au document dont la date est la plus récente.
-
-Les multiples critères (Catégorie, Type, Date, Statut, Contacts ou Groupe de
-contacts associés, Émetteur) disponibles dans la gestion documentaire
-apportent donc une puissance inégalée pour partager des documents simplement.
-
-<!-- ![Jean partage un passeport à un groupe puis met à jours son passeport](./documents-sharing.gif) -->
-
-# Un document avec ses données associées
-
-eKee permet d'associer des modèles de données à des documents (Pièces
-d’identités, RIB, Factures…). Ainsi, les documents qui bénéficient d’un modèle
-de données pourront être communiqués avec les données essentielles qui sont
-nécessaires à leur exploitation (Numéro de passeport, date d'émission, date de
-fin de validité, IBAN,numéro de facture, émetteur, montant HT, montant TTC, ...).
-
-![Passeport avec ses données associées](./document-model-information.png)
-
-<center style="margin-top: -12px">
-  <i>
-    Le modèle de document "Passeport" permet d'exploiter directement les données
-    associées
-  </i>
-</center>
-<br />
-
-# Gagnez du temps
-
-Avec l’accès donné par eKee aux bases RNCS, SIRENE et BODACC, vous pouvez en
-un clic enregistrer dans votre gestion documentaire les actes ou comptes
-sociaux publiés par vos clients, fournisseurs, prospects.
-
-Ces documents seront automatiquement qualifiés et vous n’aurez aucune ressaisie
-à effectuer.
-
-![Un PV d'AG qualifié grâce à l'intégration de RNCS](./document-details-rncs.png)
-
-<center style="margin-top: -12px">
-  <i>
-    Un PV d'AG téléchargé et préqualifié via
-    <a href="/blog/bases-rncs-sirene-bodacc">l'intégration de RNCS</a> dont la seule
-    opération manuelle a été d'associer des contacts et un groupe
-  </i>
-</center>
-
-<br />
-
-# Connectez vos outils existants
-
-Si vous disposez d'une GED, vous pourrez utiliser [l'API eKee](/blog/api) pour l'alimenter automatiquement.
-
-<br />
-
-**Un document c’est bien, avec les données c’est mieux !**
+### Deploying the resources in k8s
