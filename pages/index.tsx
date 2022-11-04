@@ -49,7 +49,7 @@ export default function Index({ buildTime }: IndexProps) {
       <Container>
         <Nav />
         <Intro />
-        <section className="text-white z-50 flex flex-col pt-16 pb-32 space-y-48 m-auto sm:w-sm lg:w-full justify-center">
+        <section className="text-white z-50 flex flex-col pt-16 pb-32 space-y-14 md:space-y-32 lg:space-y-40 m-auto sm:w-sm lg:w-full justify-center">
           <Section
             href="/blog/engineering"
             title="Engineering articles"

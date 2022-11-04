@@ -16,7 +16,7 @@ const Nav = () => (
     </Link>
     <div className="flex items-center space-x-2">
       <a
-        href="https://github.com/Dot-H/website"
+        href="https://github.com/Dot-H/brain-visit"
         target="_blank"
         rel="noreferrer"
       >
