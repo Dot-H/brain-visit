@@ -3,7 +3,7 @@ releaseDate: "2021-02-15"
 title: "Setting up a startup's staging environment"
 category: "engineering"
 tags: ["devops", "design"]
-description: "How to settup a simple staging environment based on a gitops approach coupled with a k8s infrastructure"
+description: 'See how to expose a staging version of a service just by adding the label "staging" to a pull request using github workflows, kubernetes and helm'
 ---
 
 _To illustrate this article, you can find the github repository
@@ -15,7 +15,7 @@ the users. Issue being we were a startup and duplicating the environment was way
 to expensive.
 
 In this article, I'll shortly explain our backend architecture, the solution I
-went to, the tools used to develop it and its limitations.
+went to and the tools used to develop it.
 
 ## The backend environment
 
@@ -217,22 +217,86 @@ want the pods to always pull to make sure they always have the latest version.
 
 #### Make staging elements use production resources
 
-There is one downside to the `ekee.helm` approach. Since **all** the resources names starts with the [`ekee.name`](https://github.com/Dot-H/ekee-k8s/blob/master/ekee/templates/_helpers.tpl) prefix, the secrets and configs expected by the staging elements should also
-starts with it. Yet, as we said previously, we don't deploy anything other than the `Service` and `Deployment` resources. Therefore, the
-templates must contain a way to say to `ekee.helm` "Do not use the `.Values.nameOverride` here". To do so, there is a new template [`ekee.strictName`](https://github.com/Dot-H/ekee-k8s/blob/master/ekee/templates/_helpers.tpl) which is used like
+To permit one template file to be used by both the production & staging
+deployments, their name are computed using the [`staging-env.name` template](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/templates/_helpers.tpl#L4).
+Nevertheless, some resources like secrets aren't meant for staging. For that
+purpose, the [`staging-env.strictName`](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/templates/_helpers.tpl#L12)
+template permits to keep a fixed name which can then be used in staging
+deployments:
 
 ```yaml
-- name: EKEE_AUTH_DB_USER_NAME
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "ekee.strictName" . }}-db-oauth2-secrets
-      key: username
+# deployment.yaml
+#....
+- name: ECHO_SERVER_USERNAME
+valueFrom:
+	secretKeyRef:
+	name: {{ include "staging-env.strictName" . }}-secret
+	key: username
 ```
 
 #### Ignored resources
 
-The ignored resources are wrapped in a `if` clause at the beginning of the files to ignore ([exemple](https://github.com/Dot-H/ekee-k8s/blob/master/ekee/templates/10-namespace.yaml#L1)).
+To avoid resources to be present in the staging deployments, they are wrapped
+in a conditional clause at the beginning of the file to ignore:
 
-there is a `.Values.staging.tag` defined and does nothing if so.
+```yaml
+# secret.yaml
+{{- if not .Values.staging.tag }} # Not in staging mode
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "staging-env.strictName" . }}-secret
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: MWYyZDFlMmU2N2Rm
+{{- end }} # Not in staging mode
+```
 
 #### Deploy a staging environment
+
+Finally, thanks to all those tricks, deploying a staging environment is as
+simple as deploying a production one. All we need to do is:
+
+- Give it a name;
+- Specify the tag to use for the docker images;
+- Inform which services are enabled.
+
+```bash
+helm install staging-echo-server . \
+	--values values-staging.yaml \
+	--set nameOverride=staging-echo-server \
+	--set staging.tag=staging-update-echo \
+	--set staging.enabled.echoServer=true
+```
+
+And that's it! The host `echo.staging-echo-server.alx-b.com` will be available
+and route to the `staging-update-echo` version of the echo server.
+
+To uninstall the staging env and free all the resources allocated
+we just need to run:
+
+```bash
+helm delete staging-echo-server
+```
+
+## Conclusion
+
+In this article we've seen how combining the github workflow, docker and helm
+permitted us to setup a whole staging environment just from adding the label
+_staging_ to a pull request.
+
+With this base, you can build more complex and complete environment. At eKee
+we used this in an architecture with 8 services connected with each others and
+despite multiple staging environments running at once, the extra cost stood low.
+Nevertheless, I recommand you to have a mirrored database for your staging
+environments. A mistake happens quickly when you deploy the latest commits of
+unmerged PRs 👀
+
+I did not take the time to show you how you could connect the deployment to
+github. Personnaly I like to use [**argocd**](https://argo-cd.readthedocs.io/en/stable/)
+to manage deployments. It handles everything from the deployments to the rollbacks
+and has a nice interface for my engineers to manage their staging environment without
+having to type commands. Personnaly I felt like this section was making the
+article way too big but if you feel like it's needed, don't hesitate to send me
+a message on [Linkedin](https://www.linkedin.com/in/alexandre-bernard-ek/).
