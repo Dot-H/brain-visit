@@ -68,20 +68,20 @@ Here is the action we need to tag the latest PR's commit when the _staging_ labe
 is present and untag it when the PR is closed or unlabeled:
 
 ```yaml
-name: Staging environment management
+name: Release staging version
 on:
   pull_request:
-    types: [opened, closed, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened, labeled]
 jobs:
   tag:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-ci') }}
-    name: Tag staging
+    name: Release staging
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      # Retrieve the branch name
+      # Retrieve the branch name when there is a `staging` label
       - name: Extract branch name
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
@@ -89,8 +89,6 @@ jobs:
       # Tag the current commit with `staging-BRANCH_NAME` when there is a `staging` label
       - name: "Tag staging"
         uses: eKee-io/git-tag-action@fix-not-a-git-dir
-        # Ensure that this step only runs if the staging label is present and the
-        # action is not "closed" nor "unlabeled"
         if:
           ${{ !contains(fromJson('["unlabeled", "closed"]'), github.event.action)
           && contains(github.event.pull_request.labels.*.name, 'staging') }}
@@ -98,22 +96,7 @@ jobs:
           TAG: staging-${{ steps.extract_branch.outputs.branch }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.extract_branch.outputs.branch }}
-      # Delete the `staging-BRANCH_NAME` tag if the PR is closed or unlabeled
-      - name: "Untag staging"
-        uses: eKee-io/git-tag-action@fix-not-a-git-dir
-        if: ${{ contains(github.event.action, 'closed') ||
-          (contains(github.event.action, 'unlabeled')
-          && !contains(github.event.pull_request.labels.*.name, 'staging')) }}
-        env:
-          TAG: staging-${{ steps.extract_branch.outputs.branch }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ steps.extract_branch.outputs.branch }}
-          DELETE: true
 ```
-
-So basically everything it does is just managing the staging tag. And since our
-environment was already triggering an image building upon tagging event, the gitops
-part is already done!
 
 ### Building the staging image to deploy
 
@@ -125,4 +108,131 @@ Nothing fancy here! What we deploy is a docker image so the strategy is pretty s
 1. Push this image to your registry in order for it to be accessible by
    your cloud resources.
 
+To illustrate this, I used the github container registry in
+[Dot-H/simple-staging-env-ex](https://github.com/Dot-H/simple-staging-env-ex).
+
+With the github workflows I had an issue I didn't have with gitlab: a workflow inside a
+branch does not seem to be able to trigger an other one without the explicit
+[workflow_run](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run)
+action..
+
+So no fancy linking through the tag event possible. We need to use this action in the
+[build_image.yaml](https://github.com/Dot-H/simple-staging-env-ex):
+
+```yaml
+name: Build docker image
+on:
+  workflow_run:
+    workflows: ["Release staging version"]
+    types:
+      - completed
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+jobs:
+  deploy:
+    name: Build the docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        # The workflow runs on the main branch, we need to checkout to the
+        # commit which triggered the `workflow_run` action
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }} # Login to ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # Nicely format the tags & labels. This maybe useful if, as for me,
+      # your actor name contains uppercase letters
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=staging-${{ github.event.workflow_run.head_branch }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+```
+
 ### Deploying the resources in k8s
+
+Once the staging image is built and present on your container registry, it
+should be available to your infrastructure.
+
+In order for the infrastructure to handle the deployment of the staging
+version, what we need is add a staging version for the [_deployment_](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+, the [_service_](https://kubernetes.io/docs/concepts/services-networking/service/)
+and potentially exposing through an [_ingress_](https://kubernetes.io/docs/concepts/services-networking/service/).
+
+To do so without having to rewrite everything, I use [helm](https://helm.sh/)
+and its templates. I won't explain the helm chart I developed for the example
+in details here but rather the small helm tricks I used. Take a glance [here](https://github.com/Dot-H/simple-staging-env-ex/tree/main/k8s/staging-env)
+to illustrate what I'm saying.
+
+#### Staging specific values
+
+The helm staging values are defined in the [`values-staging.yaml`](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/values-staging.yaml)
+and by default extend [`values.yaml`](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/values.yaml).
+
+The staging value file is composed as follow:
+
+```yaml
+nameOverride: "NAME"
+image:
+  pullPolicy: Always
+staging:
+  tag: staging-BRANCH_NAME
+  enabled:
+    echo-server: true
+```
+
+The `staging.enabled` controls which services compose the staging deployment
+by using the `staging.tag`. When used, the tag is expected to be available
+on the cloud repository.
+
+The `nameOverride` permits to give a name to the created resources in the
+staging environment. This avoids them to conflict with the production ones.
+You may wonder why we don't rely on namespaces here. The main reason is that
+it makes sharing resources between the staging environment and the production
+one harder and the configuration less clear. With this approach, having staging
+versions using only a subset of the real environment is way simpler.
+
+The `image.pullPolicy: Always` causes the staging pods to always pull their
+images. This is important because our building process does not change the tag
+when a new version is deployed, it just publishes a new image. Therefore we
+want the pods to always pull to make sure they always have the latest version.
+
+#### Make staging elements use production resources
+
+There is one downside to the `ekee.helm` approach. Since **all** the resources names starts with the [`ekee.name`](https://github.com/Dot-H/ekee-k8s/blob/master/ekee/templates/_helpers.tpl) prefix, the secrets and configs expected by the staging elements should also
+starts with it. Yet, as we said previously, we don't deploy anything other than the `Service` and `Deployment` resources. Therefore, the
+templates must contain a way to say to `ekee.helm` "Do not use the `.Values.nameOverride` here". To do so, there is a new template [`ekee.strictName`](https://github.com/Dot-H/ekee-k8s/blob/master/ekee/templates/_helpers.tpl) which is used like
+
+```yaml
+- name: EKEE_AUTH_DB_USER_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "ekee.strictName" . }}-db-oauth2-secrets
+      key: username
+```
+
+#### Ignored resources
+
+The ignored resources are wrapped in a `if` clause at the beginning of the files to ignore ([exemple](https://github.com/Dot-H/ekee-k8s/blob/master/ekee/templates/10-namespace.yaml#L1)).
+
+there is a `.Values.staging.tag` defined and does nothing if so.
+
+#### Deploy a staging environment
