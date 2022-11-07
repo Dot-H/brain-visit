@@ -6,12 +6,23 @@ tags: ["golang", "design"]
 description: "Lean more about the design and the constraints we had when developing a zero-configuration query language at eKee"
 ---
 
-Si la décentralisation est bien souvent une bonne chose, lorsqu'il en vient de l'information,
-cela rend plus compliqué son accès et le maintient de sa cohérence
+When I started eKee, the idea was pretty simple: permit any kind of application to
+connect with each other and automate their data exchange. But, for privacy reasons,
+I wanted to develop a technology able to not store the data: just permits the
+exchanges.
 
-eKee apporte une base de données pour gérer ses données et documents ainsi que les données et
-documents de ses contacts. De la même façon, eKee donne accès à des bases de données tierces
-pour faciliter la gestion de ses contacts entreprises.
+Of course, we had to make compromises along the way. But, with a query language able
+to run without configuration, you'll see that we come pretty close. In this article
+I'll talk more about:
 
-Dans cet article découvrez comment eKee peut vous permettre de centraliser vos données et mettre
-en place des data rooms puissantes, capables de servir de SSOT (Single Source Of Truth).
+- how this query language was designed,
+- how we managed to make it handle different kind of databases (Both SQL & NoSQL),
+- what are the main constraints when wanting to get rid of the need of a configuration.
+
+In order to make it fit into a digeastable content, the implementation tricks and
+pitfalls will be focused on the support of SQL databases. This use case is the most
+tricky and interesting.
+
+<h3 class="text-center">
+  <i class="text-secondary">More to come soon...</i>
+</h3>
