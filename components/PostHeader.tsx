@@ -21,7 +21,11 @@ const PostHeader = ({ post }: PostHeaderProps) => {
         })}
       </span>
       <div className="mb-8 md:mb-16 sm:mx-0 text-center">
-        <CoverImage post={post} className={"shadow-sm flex m-auto"} />
+        <CoverImage
+          width={500}
+          post={post}
+          className={"shadow-sm flex m-auto"}
+        />
       </div>
     </>
   );

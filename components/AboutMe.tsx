@@ -24,10 +24,9 @@ const AboutMe = (props: React.HTMLAttributes<HTMLElement>) => (
       />
       <p className="text-lg p-6 md:p-4 lg:p-0">
         Software engineer, climber and trailer, I like to refer myself as a
-        curious minded guy without any talent and a lot of passions. From 2015
-        to 2020 I studied computer science at{" "}
-        <Link href="https://www.epita.fr/">Epita</Link> where I had the chance
-        to join the{" "}
+        curious minded guy with a lot of passions. From 2015 to 2020 I studied
+        computer science at <Link href="https://www.epita.fr/">Epita</Link>{" "}
+        where I had the chance to join the{" "}
         <Link href="https://blog.lse.epita.fr/categories/">LSE</Link>, a system
         and security laboratory. From 2017 to 2020 I&apos;ve also been a
         teaching assistant in C, C++, C# and led a kernel course. In parallel,
