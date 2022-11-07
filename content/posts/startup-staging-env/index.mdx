@@ -3,150 +3,300 @@ releaseDate: "2021-02-15"
 title: "Setting up a startup's staging environment"
 category: "engineering"
 tags: ["devops", "design"]
-description: "How to settup a simple staging environment based on a gitops approach coupled with a k8s infrastructure"
+description: 'See how to expose a staging version of a service just by adding the label "staging" to a pull request using github workflows, kubernetes and helm'
 ---
 
-La gestion de documents est bien souvent limitée à leur stockage. Quelle que soit la solution
-utilisée, il est toujours aussi compliqué de :
+_To illustrate this article, you can find the github repository
+[Dot-H/simple-staging-env-ex](https://github.com/Dot-H/simple-staging-env-ex)_
 
-- Classer et retrouver ses documents,
-- Être certain d'avoir la dernière version,
-- Les partager avec des personnes qui n'utilisent pas la même solution.
+At eKee, when the team and the number of users started growing, we had an issue.
+We wanted to test things out and propose different versions of the product to
+the users. Issue being we were a startup and duplicating the environment was way
+to expensive.
 
-Par ailleurs, la problématique de l'accès aux données essentielles contenues dans un document reste
-entière. Pour exemple, la récupération et l’exploitation des données contenues dans un fichier pdf
-sont loin d’être aisées et à la portée de tous.
+In this article, I'll shortly explain our backend architecture, the solution I
+went to and the tools used to develop it.
 
-# Retrouvez simplement vos documents
+## The backend environment
 
-Avec eKee vous pouvez enregistrer vos documents avec les informations essentielles qui les décrivent
-et qui constitueront autant de critères pour les retrouver facilement :
+At eKee we had an **hybrid architecture**. Without the fancy words, it just means
+that our stateful services (_databases_, _knowledge base software_, _gitlab_...)
+were running on on-premise servers while the stateless services
+(_engine_, _api_, _websites_...) were running in a cloud infrastructure using
+kubernetes.
 
-- Nom,
-- Description,
-- Date réelle du document (date de facture, date du contrat, …),
-- Catégorie (Vente, Achat, Juridique, Banque, Administratif, …),
-- Type (Facture, Contrat, Pièces d’identité, Attestation, Statuts, RIB, PV …),
-- Émetteur du document,
-- Statut (Projet, Diffusion, Nouveau, Ancien …),
-- ...
+Everything was deployed using a gitops approach, taging a new version of a service
+would trigger a new deployment. In order to do so, we were using
+[**ansible**](https://docs.ansible.com/ansible/latest/index.html) for on-premise
+services and [**helm**](https://helm.sh/) coupled with
+[**argocd**](https://argo-cd.readthedocs.io/en/stable/) for the in-cloud services.
 
-De plus, grâce à la [gestion de contacts eKee](/blog/gestion-de-contacts), vous
-pourrez associer à chaque document un ou plusieurs contacts, ou encore un
-Groupe de contacts (Salariés, Clients, Fournisseurs, Famille, …). Tous vos
-documents sont ainsi :
+## The specification
 
-- Classés de façon pertinente,
-- Facile à retrouver,
-- Facile à identifier avec les documents du même type,
-- Associés simplement aux contacts concernés.
+Based on this environment, here is what I wanted to develop:
 
-Vous pourrez également, en un clic, retrouver tous les documents associés à un contact ou à un
-Groupe de contacts.
+- Expose a `staging.[service]` subdomain for each service which would resolve to
+  a specific version of this service;
+- The version of a service could be any of its branch on git. If I want to test
+  _feature-A_ on the _ekee-api_ service I would deploy the latest commit on branch
+  _feature-A_;
+- Each service in the staging environment can use a different branch. They can be
+  deployed independantly;
+- The staging environment relies as much as it can on the prod one, no extra
+  deployment needed;
+- Deployments must be **simple**. If the developers needs to do more than two
+  operations, they won't use it (we all know we are lazy kind of people).
 
-![Passeport avec ses données associées](./documents-list-display.png)
+Following this specification, here is the developer experience I wanted:
 
-<center style="margin-top: -12px">
-  <i>
-    La liste des documents eKee permet de rapidement filtrer les documents qui
-    vous intéressent
-  </i>
-</center>
-<br />
+1. **Developer A** develops a new interface to share documents. The branch
+   _doc-sharing-v2_ is created in the repository _ekee-dashboard_,
+1. After commiting some beautiful engineering, **Developer A** opens a pull
+   request and labels it _staging_,
+1. Once the CI returns no error, **Developer A** clicks _deploy_ in _argocd_,
+1. When the PR is closed and/or the label **staging** is removed, the resources
+   used by in the staging environment are released.
 
-# Partager ou récupérer des documents simplement
+## The implementation
 
-Oubliez la contrainte de la gestion des pièces jointes à un mail, tant pour
-l'émetteur que pour le destinataire.
+### Adding the workflow around the _staging_ label in github
 
-Avec les [consentements eKee](/blog/gestion-de-consentements), donner accès à
-un ou plusieurs documents à destination d’un contact ou d’un Groupe de contacts
-n’a jamais été aussi simple.
+To trigger special workflows upon specific events, github exposes a wonderful
+set of tools through what they call [github actions](https://docs.github.com/en/actions).
 
-Vous maîtrisez en permanence qui peut accéder à quels documents, et vous êtes
-ainsi certain que vos interlocuteurs pourront avoir accès à la dernière version
-de vos documents.
+Here is the action we need to tag the latest PR's commit when the _staging_ label
+is present and untag it when the PR is closed or unlabeled:
 
-Pour exemple :
+```yaml
+name: Release staging version
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+jobs:
+  tag:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-ci') }}
+    name: Release staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      # Retrieve the branch name when there is a `staging` label
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
+        id: extract_branch
+      # Tag the current commit with `staging-BRANCH_NAME` when there is a `staging` label
+      - name: "Tag staging"
+        uses: eKee-io/git-tag-action@fix-not-a-git-dir
+        if:
+          ${{ !contains(fromJson('["unlabeled", "closed"]'), github.event.action)
+          && contains(github.event.pull_request.labels.*.name, 'staging') }}
+        env:
+          TAG: staging-${{ steps.extract_branch.outputs.branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.extract_branch.outputs.branch }}
+```
 
-1. La société **A** créé un consentement donnant accès aux documents
-   qui possèdent les critères:
-   - Catégorie = “Vente”,
-   - Statut = “Diffusion“,
-   - Associés au Groupe de contacts “Clients”.
-2. Tous les documents destinés à ses clients leurs sont donc automatiquement
-   diffusés (Condition générales de vente, RIB, Attestation d’assurance, ….),
-3. Si **A** rajoute un nouveau document répondant à ces critères, tous ses
-   clients y auront automatiquement accès et recevront une notification. De
-   même, ajouter un contact au groupe “Client” permettra à ce dernier d'accéder
-   à ces mêmes documents.
+### Building the staging image to deploy
 
-Plus puissant encore, le même consentement pourra permettre de diffuser les
-documents qui auront été spécifiquement associés à un contact du groupe.
+Nothing fancy here! What we deploy is a docker image so the strategy is pretty simple:
 
-- Les documents généraux associés au groupe “Clients” seront accessibles par tous les
-  contacts membres
-- Les documents spécifiquement associés à un contact appartenant à ce même groupe,
-  seront accessibles par ce seul contact.
+1. Put a Dockerfile in the root directory of the services,
+1. Add an action triggered on tagging events building the docker image,
+1. Tag the docker image with the same tag as git,
+1. Push this image to your registry in order for it to be accessible by
+   your cloud resources.
 
-Autres cas d’usage, on peut partager très simplement :
+To illustrate this, I used the github container registry in
+[Dot-H/simple-staging-env-ex](https://github.com/Dot-H/simple-staging-env-ex).
 
-- Sa dernière pièce d’identité
-- Son dernier kBis
-- Ses derniers statuts
-- ...
+With the github workflows I had an issue I didn't have with gitlab: a workflow inside a
+branch does not seem to be able to trigger an other one without the explicit
+[workflow_run](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run)
+action..
 
-eKee donnera accès automatiquement au document dont la date est la plus récente.
+So no fancy linking through the tag event possible. We need to use this action in the
+[build_image.yaml](https://github.com/Dot-H/simple-staging-env-ex):
 
-Les multiples critères (Catégorie, Type, Date, Statut, Contacts ou Groupe de
-contacts associés, Émetteur) disponibles dans la gestion documentaire
-apportent donc une puissance inégalée pour partager des documents simplement.
+```yaml
+name: Build docker image
+on:
+  workflow_run:
+    workflows: ["Release staging version"]
+    types:
+      - completed
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+jobs:
+  deploy:
+    name: Build the docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        # The workflow runs on the main branch, we need to checkout to the
+        # commit which triggered the `workflow_run` action
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }} # Login to ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # Nicely format the tags & labels. This maybe useful if, as for me,
+      # your actor name contains uppercase letters
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=staging-${{ github.event.workflow_run.head_branch }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+```
 
-<!-- ![Jean partage un passeport à un groupe puis met à jours son passeport](./documents-sharing.gif) -->
+### Deploying the resources in k8s
 
-# Un document avec ses données associées
+Once the staging image is built and present on your container registry, it
+should be available to your infrastructure.
 
-eKee permet d'associer des modèles de données à des documents (Pièces
-d’identités, RIB, Factures…). Ainsi, les documents qui bénéficient d’un modèle
-de données pourront être communiqués avec les données essentielles qui sont
-nécessaires à leur exploitation (Numéro de passeport, date d'émission, date de
-fin de validité, IBAN,numéro de facture, émetteur, montant HT, montant TTC, ...).
+In order for the infrastructure to handle the deployment of the staging
+version, what we need is add a staging version for the [_deployment_](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+, the [_service_](https://kubernetes.io/docs/concepts/services-networking/service/)
+and potentially exposing through an [_ingress_](https://kubernetes.io/docs/concepts/services-networking/service/).
 
-![Passeport avec ses données associées](./document-model-information.png)
+To do so without having to rewrite everything, I use [helm](https://helm.sh/)
+and its templates. I won't explain the helm chart I developed for the example
+in details here but rather the small helm tricks I used. Take a glance [here](https://github.com/Dot-H/simple-staging-env-ex/tree/main/k8s/staging-env)
+to illustrate what I'm saying.
 
-<center style="margin-top: -12px">
-  <i>
-    Le modèle de document "Passeport" permet d'exploiter directement les données
-    associées
-  </i>
-</center>
-<br />
+#### Staging specific values
 
-# Gagnez du temps
+The helm staging values are defined in the [`values-staging.yaml`](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/values-staging.yaml)
+and by default extend [`values.yaml`](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/values.yaml).
 
-Avec l’accès donné par eKee aux bases RNCS, SIRENE et BODACC, vous pouvez en
-un clic enregistrer dans votre gestion documentaire les actes ou comptes
-sociaux publiés par vos clients, fournisseurs, prospects.
+The staging value file is composed as follow:
 
-Ces documents seront automatiquement qualifiés et vous n’aurez aucune ressaisie
-à effectuer.
+```yaml
+nameOverride: "NAME"
+image:
+  pullPolicy: Always
+staging:
+  tag: staging-BRANCH_NAME
+  enabled:
+    echo-server: true
+```
 
-![Un PV d'AG qualifié grâce à l'intégration de RNCS](./document-details-rncs.png)
+The `staging.enabled` controls which services compose the staging deployment
+by using the `staging.tag`. When used, the tag is expected to be available
+on the cloud repository.
 
-<center style="margin-top: -12px">
-  <i>
-    Un PV d'AG téléchargé et préqualifié via
-    <a href="/blog/bases-rncs-sirene-bodacc">l'intégration de RNCS</a> dont la seule
-    opération manuelle a été d'associer des contacts et un groupe
-  </i>
-</center>
+The `nameOverride` permits to give a name to the created resources in the
+staging environment. This avoids them to conflict with the production ones.
+You may wonder why we don't rely on namespaces here. The main reason is that
+it makes sharing resources between the staging environment and the production
+one harder and the configuration less clear. With this approach, having staging
+versions using only a subset of the real environment is way simpler.
 
-<br />
+The `image.pullPolicy: Always` causes the staging pods to always pull their
+images. This is important because our building process does not change the tag
+when a new version is deployed, it just publishes a new image. Therefore we
+want the pods to always pull to make sure they always have the latest version.
 
-# Connectez vos outils existants
+#### Make staging elements use production resources
 
-Si vous disposez d'une GED, vous pourrez utiliser [l'API eKee](/blog/api) pour l'alimenter automatiquement.
+To permit one template file to be used by both the production & staging
+deployments, their name are computed using the [`staging-env.name` template](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/templates/_helpers.tpl#L4).
+Nevertheless, some resources like secrets aren't meant for staging. For that
+purpose, the [`staging-env.strictName`](https://github.com/Dot-H/simple-staging-env-ex/blob/main/k8s/staging-env/templates/_helpers.tpl#L12)
+template permits to keep a fixed name which can then be used in staging
+deployments:
 
-<br />
+```yaml
+# deployment.yaml
+#....
+- name: ECHO_SERVER_USERNAME
+valueFrom:
+	secretKeyRef:
+	name: {{ include "staging-env.strictName" . }}-secret
+	key: username
+```
 
-**Un document c’est bien, avec les données c’est mieux !**
+#### Ignored resources
+
+To avoid resources to be present in the staging deployments, they are wrapped
+in a conditional clause at the beginning of the file to ignore:
+
+```yaml
+# secret.yaml
+{{- if not .Values.staging.tag }} # Not in staging mode
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "staging-env.strictName" . }}-secret
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: MWYyZDFlMmU2N2Rm
+{{- end }} # Not in staging mode
+```
+
+#### Deploy a staging environment
+
+Finally, thanks to all those tricks, deploying a staging environment is as
+simple as deploying a production one. All we need to do is:
+
+- Give it a name;
+- Specify the tag to use for the docker images;
+- Inform which services are enabled.
+
+```bash
+helm install staging-echo-server . \
+	--values values-staging.yaml \
+	--set nameOverride=staging-echo-server \
+	--set staging.tag=staging-update-echo \
+	--set staging.enabled.echoServer=true
+```
+
+And that's it! The host `echo.staging-echo-server.alx-b.com` will be available
+and route to the `staging-update-echo` version of the echo server.
+
+To uninstall the staging env and free all the resources allocated
+we just need to run:
+
+```bash
+helm delete staging-echo-server
+```
+
+## Conclusion
+
+In this article we've seen how combining the github workflow, docker and helm
+permitted us to setup a whole staging environment just from adding the label
+_staging_ to a pull request.
+
+With this base, you can build more complex and complete environment. At eKee
+we used this in an architecture with 8 services connected with each others and
+despite multiple staging environments running at once, the extra cost stood low.
+Nevertheless, I recommand you to have a mirrored database for your staging
+environments. A mistake happens quickly when you deploy the latest commits of
+unmerged PRs 👀
+
+I did not take the time to show you how you could connect the deployment to
+github. Personnaly I like to use [**argocd**](https://argo-cd.readthedocs.io/en/stable/)
+to manage deployments. It handles everything from the deployments to the rollbacks
+and has a nice interface for my engineers to manage their staging environment without
+having to type commands. Personnaly I felt like this section was making the
+article way too big but if you feel like it's needed, don't hesitate to send me
+a message on [Linkedin](https://www.linkedin.com/in/alexandre-bernard-ek/).
