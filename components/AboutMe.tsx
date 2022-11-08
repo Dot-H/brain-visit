@@ -10,7 +10,10 @@ import cn from "classnames";
 import SittenOnARidge from "public/assets/self_on_a_ridge.webp";
 
 const AboutMe = (props: React.HTMLAttributes<HTMLElement>) => (
-  <article {...props} className={cn(props.className, "m-auto lg:max-w-[80%]")}>
+  <article
+    {...props}
+    className={cn(props.className, "m-auto lg:max-w-[80%] text-primary")}
+  >
     <h1 className="text-center text-4xl">About me</h1>
     <span className="w-[12ch] h-[1px] my-3 block border-b m-auto" />
     <div className="flex flex-col mt-10 lg:flex-row items-center justify-center">

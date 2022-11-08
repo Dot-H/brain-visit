@@ -75,7 +75,7 @@ module.exports = {
                 },
                 a: {
                   textDecoration: 'none',
-									cursor: "pointer"
+									cursor: "pointer",
                 },
                 'a:hover,a:focus': {
                   textDecoration: 'underline',
@@ -157,6 +157,7 @@ module.exports = {
                 color: theme('colors.gray.500'),
                 a: {
                   color: theme('colors.team.current'),
+									borderColor: theme('colors.black'),
                 },
                 strong: {
                   color: theme('colors.black'),
@@ -187,6 +188,7 @@ module.exports = {
                 color: theme('colors.slate.200'),
                 a: {
                   color: theme('colors.team.current'),
+									borderColor: theme('colors.white'),
                 },
                 strong: {
                   color: theme('colors.white'),
